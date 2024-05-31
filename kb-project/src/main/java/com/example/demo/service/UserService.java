@@ -23,10 +23,9 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 
-	public User createUser(UserDto user) {
+	public User createUser(UserDto userDto) {
 
-		User user2 = user.toEntity();
-		System.out.println("userservice");
+		User user2 = userDto.toEntity();
 		return userRepository.save(user2);
 	}
 

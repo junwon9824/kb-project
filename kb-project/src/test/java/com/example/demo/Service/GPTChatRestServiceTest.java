@@ -2,27 +2,38 @@ package com.example.demo.Service;
 
 import com.example.demo.dto.GPTResponseDto;
 import com.example.demo.service.GPTChatRestService;
-
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
-@SpringBootTest
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class GPTChatRestServiceTest {
-    @Autowired
+
+    @Mock
     GPTChatRestService gptChatRestService;
+
     @Test
-    void 문자열을_객체로_변환() {
-        GPTResponseDto gptResponseDto = gptChatRestService.completionChat("김건에게 만원 송금");
+    void testCompletionChat() {
+        // Given
+        String input = "김건에게 만원 송금";
+        GPTResponseDto mockResponse = new GPTResponseDto("송금", "김건", new BigDecimal("10000"));
+        when(gptChatRestService.completionChat(input)).thenReturn(mockResponse);
 
-        GPTResponseDto result = new GPTResponseDto("송금", "김건", new BigDecimal("10000"));
+        // When
+        GPTResponseDto gptResponseDto = gptChatRestService.completionChat(input);
 
-        assertEquals(gptResponseDto.getName(), result.getName());
-        assertEquals(gptResponseDto.getAction(), result.getAction());
-        assertEquals(gptResponseDto.getAmount(), result.getAmount());
+        // Then
+        GPTResponseDto expectedResponse = new GPTResponseDto("송금", "김건", new BigDecimal("10000"));
+        assertEquals(expectedResponse.getName(), gptResponseDto.getName());
+        assertEquals(expectedResponse.getAction(), gptResponseDto.getAction());
+        assertEquals(expectedResponse.getAmount(), gptResponseDto.getAmount());
+
     }
 }

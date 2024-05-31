@@ -11,18 +11,14 @@ import javax.persistence.OneToMany;
 import com.example.demo.entity.BankAccount;
 import com.example.demo.entity.User;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class UserDto {
 	private Long id;
 	private String username;

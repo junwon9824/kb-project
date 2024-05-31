@@ -6,6 +6,7 @@ import com.example.demo.entity.BankAccount;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@Slf4j
 class UserServiceTest {
 
     @Mock
@@ -40,26 +42,29 @@ class UserServiceTest {
                 .bank(Bank.builder()
                         .bankname("shinhan")
                         .id(2L)
-                        .build())
-                .build());
 
+                        .build())
+                .accountNumber("22-2424-2424")
+                .amount(11L)
+                .user(userRepository.findByuserid("a"))
+                .id(1L)
+                .build()
+
+        );
+        log.info("findbyuserid"+userRepository.findByuserid("a"));
         UserDto userDto = UserDto.builder()
                 .password(password)
-                .username("a")
+                .id(2L)
+                .username(username)
                 .userid("sdf")
-                .bankAccounts(bankAccount)
+//                .bankAccounts(bankAccount)
                 .phone("010111111")
                 .disabled(true)
                 .address("seoul")
                 .clientSafeIp("123.222.222")
                 .account_password("1234")
-                .id(1L)
                 .build();
 
-        User newUser = User.builder()
-                .username(username)
-                .password(password)
-                .build();
 
 //        return User.builder().username(username).userid(userid).password(password).phone(phone).address(address)
 //                .disabled(disabled).bankAccounts(bankAccounts).account_password(account_password).clientSafeIp(clientSafeIp).build();
@@ -68,6 +73,7 @@ class UserServiceTest {
 //        when(userRepository.save(newUser)).thenReturn(newUser);
 
         // When
+
         User createdUser = userService.createUser(userDto);
 
         // Then

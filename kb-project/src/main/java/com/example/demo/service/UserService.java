@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 
 @Service
+@Slf4j
 public class UserService {
 
 	private final UserRepository userRepository;
@@ -26,7 +28,16 @@ public class UserService {
 	public User createUser(UserDto userDto) {
 
 		User user2 = userDto.toEntity();
-		return userRepository.save(user2);
+		log.info("user2"+user2.toString());
+		try {
+			User user = userRepository.save(user2);
+			log.info("userrrr" + user.getId());
+			return user;
+		} catch (Exception e) {
+			log.error("Error saving user: " + e.getMessage());
+			throw new RuntimeException("Error saving user", e);
+		}
+
 	}
 
 	public User updateUser(Long id, User user) {

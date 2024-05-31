@@ -20,22 +20,29 @@ import lombok.*;
 @ToString
 @Builder
 public class UserDto {
-	private Long id;
-	private String username;
-	private String userid;
-	private String password;
-	private String phone;
-	private String address;
-	private String account_password;
-	private String clientSafeIp;
+    	private Long id;
+    private String username;
+    private String userid;
+    private String password;
+    private String phone;
+    private String address;
+    private String account_password;
+    private String clientSafeIp;
 
-	private boolean disabled;
+    private boolean disabled;
 
-	private List<BankAccount> bankAccounts = new ArrayList<>();
+    private List<BankAccount> bankAccounts = new ArrayList<>();
 
-	public User toEntity() {
-		return User.builder().username(username).userid(userid).password(password).phone(phone).address(address)
-				.disabled(disabled).bankAccounts(bankAccounts).account_password(account_password).clientSafeIp(clientSafeIp).build();
+    public User toEntity() {
+        return User.builder().username(username)
+                .userid(userid)
+                .password(password)
+                .phone(phone)
+                .address(address)
+                .disabled(disabled)
+                .bankAccounts(bankAccounts)
+                .account_password(account_password)
+                .clientSafeIp(clientSafeIp).build();
 
-	}
+    }
 }

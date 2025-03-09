@@ -135,57 +135,68 @@ public class BankAccountService {
 		transferToUser(transferDto, sender);
 	}
 
-	// 송금
 	@Transactional
 	public void transferToUser(TransferDto transferDto, User sender) {
 		// TransferDto
 		System.out.println(transferDto.toString());
-		BankAccount mybankAccount = new BankAccount();
 
-		System.out.println("senderbanknum" + transferDto.getSender_banknumber().toString());
-		System.out.println("sendername" + transferDto.getSender_name());
-		mybankAccount = bankAccountRepository.findByAccountNumber(transferDto.getSender_banknumber());
+		// 비관적 락을 사용하여 계좌 정보를 가져옵니다.
+		BankAccount mybankAccount = bankAccountRepository.findByAccountNumberWithLock(transferDto.getSender_banknumber());
+
+		System.out.println("senderbanknum: " + transferDto.getSender_banknumber().toString());
+		System.out.println("sendername: " + transferDto.getSender_name());
 		System.out.println(mybankAccount.toString());
-		Long amount = mybankAccount.getAmount();// 본인돈
 
+		Long amount = mybankAccount.getAmount(); // 본인돈
 		Long sendamount = transferDto.getAmount(); // 보낼 돈 액수
 
 		if (amount - sendamount < 0) {
-			System.out.println("잔액부족");
+			System.out.println("잔액 부족");
 		} else {
+			mybankAccount.setAmount(amount - sendamount); // 본인계좌
 
-			mybankAccount.setAmount(amount - sendamount);// 본인계좌
+			String recipientName = transferDto.getRecipient_name();
+			User user1 = userService.getUserByUsername(recipientName); // 받는사람
 
-			String recepientName = transferDto.getRecipient_name();
-			User user1 = userService.getUserByUsername(recepientName);// 받는사람
+			Long recipientCurMoney = 0L;
 
-			Long recipent_curmoney = 0L;
+			BankAccount bankAccount1= this.getBankAccountByAccountnumber( transferDto.getRecipient_banknumber());
 
-			BankAccount bankAccount = new BankAccount();
-			for (BankAccount bankAccounts1 : user1.getBankAccounts()) {
-				if (bankAccounts1.getAccountNumber().equals(transferDto.getRecipient_banknumber())) {
-					recipent_curmoney = bankAccounts1.getAmount();// 받는사람현재잔액
-					bankAccount = bankAccounts1;// 받는사람 계좌
-				}
+			recipientCurMoney = bankAccount1.getAmount(); // 받는사람 현재 잔액
+			BankAccount bankAccount = bankAccount1; // 받는사람 계좌
+
+//			for (BankAccount bankAccounts1 : user1.getBankAccounts()) {
+//				if (bankAccounts1.getAccountNumber().equals(transferDto.getRecipient_banknumber())) {
+//					recipientCurMoney = bankAccounts1.getAmount(); // 받는사람 현재 잔액
+//					bankAccount = bankAccounts1; // 받는사람 계좌
+//					break; // 계좌를 찾으면 루프 종료
+//				}
+//			}
+
+			if (bankAccount != null) {
+				bankAccount.setAmount(recipientCurMoney + sendamount); // 받는사람 계좌 돈 증가
+				updateBankAccount(mybankAccount.toDto()); // 내 계좌에 돈이 빠졌으니 업데이트
+
+				Log logentity = transferDto.toEntity(); // 송금
+				TransferDto transferGetDto = TransferDto.builder()
+						.amount(transferDto.getAmount())
+						.category("입금")
+						.recipient_banknumber(transferDto.getRecipient_banknumber())
+						.sender_banknumber(transferDto.getSender_banknumber())
+						.sender_name(transferDto.getSender_name())
+						.recipient_name(transferDto.getRecipient_name())
+						.user(user1)
+						.build();
+
+				System.out.println("transfergetdto sendername: " + transferGetDto.getSender_name());
+				Log logentityGet = transferGetDto.toEntity(); // 입금
+
+				logService.save(logentity);
+				logService.save(logentityGet);
 			}
-
-			bankAccount.setAmount(recipent_curmoney + sendamount); // 받는사람계좌 돈 증가
-			updateBankAccount(mybankAccount.toDto()); // 내 계좌에 돈 이빠졋으니 업데이트
-			Log logentity = transferDto.toEntity();// 송금
-
-			TransferDto transfergetDto = TransferDto.builder().amount(transferDto.getAmount()).category("입금")
-					.recipient_banknumber(transferDto.getRecipient_banknumber())
-					.sender_banknumber(transferDto.getSender_banknumber()).sender_name(transferDto.getSender_name())
-					.recipient_name(transferDto.getRecipient_name()).user(user1).build();
-
-			System.out.println("transfergetdto sendername" + transfergetDto.getSender_name());
-			Log logentityget = transfergetDto.toEntity();// 입금
-
-			logService.save(logentity);
-			logService.save(logentityget);
 		}
-
 	}
+
 
 	public void setmainAccount(BankAccountDto bankAccountDto) {
 		System.out.println("mainaccount");

@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.BankAccountDto;
+import com.example.demo.dto.LogDto;
 import com.example.demo.entity.Bank;
 import com.example.demo.entity.BankAccount;
 import com.example.demo.entity.Log;
@@ -48,7 +49,9 @@ public class LogController {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 
-		List<Log> logs = logService.getlogs(user, myaccountnumber);
+		System.out.println("getlogof my account" + myaccountnumber);
+
+		List<LogDto> logs = logService.getlogs(user, myaccountnumber);
 		
 
 		System.out.println("myaccountnumber" + myaccountnumber);

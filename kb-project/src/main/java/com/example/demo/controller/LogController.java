@@ -49,10 +49,44 @@ public class LogController {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 
+
+		/// // jmeter 하드코딩
+		user.setUserid("junho1131");
+
+
+
+		/// // jmeter 하드코딩
+
 		System.out.println("getlogof my account" + myaccountnumber);
 
 		List<LogDto> logs = logService.getlogs(user, myaccountnumber);
 		
+
+		System.out.println("myaccountnumber" + myaccountnumber);
+		System.out.println("logs" + logs.toString());
+		model.addAttribute("Log", logs);
+
+		if (user.isDisabled()) {// 장애인
+
+			return "log/logs2";
+
+		} else {// 비장애인
+			return "log/logs";
+		}
+
+	}
+
+	@GetMapping("/withoutcache/log/{myaccountnumber}") //
+	public String getlogswithoutcahce(@PathVariable("myaccountnumber") String myaccountnumber, Model model,
+						  HttpServletRequest request) {
+
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+
+		System.out.println("getlogof my account" + myaccountnumber);
+
+		List<LogDto> logs = logService.getlogswithoutcache(user, myaccountnumber);
+
 
 		System.out.println("myaccountnumber" + myaccountnumber);
 		System.out.println("logs" + logs.toString());

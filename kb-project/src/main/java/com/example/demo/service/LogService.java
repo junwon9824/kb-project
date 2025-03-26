@@ -68,6 +68,44 @@ public class LogService {
 //		return logsList;
 //	}
 
+
+
+
+    public List<LogDto> getlogswithoutcache(User user, String mybanknumber) {
+        // 모든 로그를 가져옵니다.
+        List<Log> logs = logRepository.findAll();
+        String userid = user.getUserid();
+
+        // 조건에 맞는 로그를 필터링합니다.
+        List<Log> filteredLogs = logs.stream().filter(log -> log.getUser().getUserid().equals(userid)) // 사용자 아이디가 일치하는
+                // 경우
+                .filter(log -> log.getRecipient_banknumber().equals(mybanknumber)
+                        || log.getSender_banknumber().equals(mybanknumber)) // 계좌번호가 일치하는 경우
+                .collect(Collectors.toList());
+
+        // createdDate 필드를 기준으로 내림차순으로 정렬합니다.
+        Collections.sort(filteredLogs, Comparator.comparing(Log::getCreatedDate).reversed());
+
+        List<LogDto> Logs = filteredLogs.stream().map(log ->
+        {
+            return LogDto.builder().
+                    amount(log.getAmount())
+                    .recipient_banknumber(log.getRecipient_banknumber())
+                    .category(log.getCategory())
+                    .sender_banknumber(log.getSender_banknumber())
+                    .recipient_name(log.getRecipient_name())
+                    .sender_name(log.getSender_name())
+                    .createdDate(log.getCreatedDate())
+                    .build();
+
+        }).collect(Collectors.toList());
+
+        // 정렬된 로그 리스트를 반환합니다.
+        return Logs;
+    }
+
+
+
     @Cacheable(value = "logCache", key = "#user.userid + '-' + #mybanknumber")
     public List<LogDto> getlogs(User user, String mybanknumber) {
         // 모든 로그를 가져옵니다.

@@ -255,11 +255,20 @@ public class UserController {
 			RedirectAttributes redirectAttributes) {
 
 		// jmeter 디버깅을 위해 일단 하드코딩
+		/// /////////////
 		User userByUserId = userService.getUserByUserId("junho1131" );
 
 		System.out.println("userByUserIduserByUserId"+userByUserId.getUserid());
+		log.setAccount_password("2");
+		log.setAccount_password(userByUserId.getAccount_password());
+		log.setSender_banknumber( "11");
+		log.setAmount(1L);
+		log.setRecipient_banknumber("1");
+		log.setRecipient_name("정준원");
 
-		session.setAttribute("user", userByUserId); // jmeter 디버깅을 위해 일단 하드코딩
+		session.setAttribute("user", userByUserId);
+/// //////////////////////
+		// jmeter 디버깅을 위해 일단 하드코딩
 
 		User user = (User) session.getAttribute("user");
 		String userid = user.getUserid();
@@ -267,6 +276,8 @@ public class UserController {
 		log.setUser(user);
 		log.setCategory("송금");
 		log.setSender_name(user.getUsername());
+
+
 		System.out.println("log.tostring" + log.toString());
 		System.out.println("user" + log.getUser().getUsername());
 		System.out.println("flag");

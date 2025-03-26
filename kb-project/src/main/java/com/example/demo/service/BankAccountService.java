@@ -156,22 +156,19 @@ public class BankAccountService {
 			mybankAccount.setAmount(amount - sendamount); // 본인계좌
 
 			String recipientName = transferDto.getRecipient_name();
-			User user1 = userService.getUserByUsername(recipientName); // 받는사람
+			User reciever = userService.getUserByUsername(recipientName); // 받는사람
+
+			System.out.println("recipientName"+recipientName);
+
+			System.out.println("reciever"+reciever.getUserid());
 
 			Long recipientCurMoney = 0L;
 
-			BankAccount bankAccount1= this.getBankAccountByAccountnumber( transferDto.getRecipient_banknumber());
+			BankAccount recieveraccount= this.getBankAccountByAccountnumber( transferDto.getRecipient_banknumber());
 
-			recipientCurMoney = bankAccount1.getAmount(); // 받는사람 현재 잔액
-			BankAccount bankAccount = bankAccount1; // 받는사람 계좌
+			recipientCurMoney = recieveraccount.getAmount(); // 받는사람 현재 잔액
+			BankAccount bankAccount = recieveraccount; // 받는사람 계좌
 
-//			for (BankAccount bankAccounts1 : user1.getBankAccounts()) {
-//				if (bankAccounts1.getAccountNumber().equals(transferDto.getRecipient_banknumber())) {
-//					recipientCurMoney = bankAccounts1.getAmount(); // 받는사람 현재 잔액
-//					bankAccount = bankAccounts1; // 받는사람 계좌
-//					break; // 계좌를 찾으면 루프 종료
-//				}
-//			}
 
 			if (bankAccount != null) {
 				bankAccount.setAmount(recipientCurMoney + sendamount); // 받는사람 계좌 돈 증가
@@ -185,11 +182,13 @@ public class BankAccountService {
 						.sender_banknumber(transferDto.getSender_banknumber())
 						.sender_name(transferDto.getSender_name())
 						.recipient_name(transferDto.getRecipient_name())
-						.user(user1)
+						.user(reciever)
 						.build();
 
 				System.out.println("transfergetdto sendername: " + transferGetDto.getSender_name());
+
 				Log logentityGet = transferGetDto.toEntity(); // 입금
+				System.out.println("logentityGet  : " +  logentityGet.getUser().getUserid() );
 
 				logService.save(logentity);
 				logService.save(logentityGet);

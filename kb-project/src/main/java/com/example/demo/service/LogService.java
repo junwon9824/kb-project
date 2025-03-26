@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -36,10 +37,19 @@ public class LogService {
 //		this.bankAccountRepository = bankAccountRepository;
 	}
 
-	public void save(Log logentity) {
+//	public void save(Log logentity) {
+//
+//		logRepository.save(logentity); // 계좌 내역 저장
+//	}
 
+
+	@CacheEvict(value = "logCache", key = "#logentity.user.userid + '-' + #logentity.user.id")
+	public void save(Log logentity) {
 		logRepository.save(logentity); // 계좌 내역 저장
 	}
+
+
+
 
 //	public List<Log> getlogs(User user, String mybanknumber) {
 //		List<Log> logs = logRepository.findAll();

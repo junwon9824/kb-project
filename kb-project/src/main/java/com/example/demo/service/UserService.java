@@ -66,7 +66,11 @@ public class UserService {
 	}
 
 	public User getUserByUsername(String username) {
+		System.out.println("username"+ username);
+
 		User user = userRepository.findByUsername(username);
+
+		System.out.println("findbyusername"+user.getUserid());
 		return user;
 
 	}

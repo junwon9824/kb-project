@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  jmeter:
+    image: justb4/jmeter:5.5  # 최신 버전으로 변경
+    ports:
+      - "60000:60000" # JMeter 서버 포트
+    volumes:
+      - ./jmeter/test:/jmeter/test # 테스트 계획 파일이 저장될 경로
+    entrypoint: "/bin/bash -c 'jmeter -n -t /jmeter/test/test_plan.jmx -l /jmeter/test/results.jtl'"

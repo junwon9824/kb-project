@@ -135,6 +135,15 @@ public class BankAccountService {
 		transferToUser(transferDto, sender);
 	}
 
+//	{
+//
+//		"recipient_name": "정준원",
+//			"recipient_banknumber": "1",
+//			"sender_banknumber": "11",
+//			"account_password": "2",
+//			"amount": 1
+//	}
+
 	@Transactional
 	public void transferToUser(TransferDto transferDto, User sender) {
 		// TransferDto

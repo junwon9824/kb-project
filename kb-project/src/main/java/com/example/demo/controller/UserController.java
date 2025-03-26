@@ -157,6 +157,8 @@ public class UserController {
 		model.addAttribute("login", new Login());
 		model.addAttribute("user", new UserDto());
 
+		System.out.println("userrrr"+model.getAttribute("user"));
+
 		return "user/index";
 
 	}
@@ -164,15 +166,21 @@ public class UserController {
 	@PostMapping("/users/index")
 	public String mainpage(@ModelAttribute("login") Login login, RedirectAttributes redirectAttributes,
 			HttpSession session) {
+
 		User userByUserId = userService.getUserByUserId(login.getUserid());
+
 		if (userByUserId != null && login.getPassword().equals(userByUserId.getPassword())) {
 			session.setAttribute("user", userByUserId); // 세션에 사용자 정보 저장
+			System.out.println("session saveeee"+userByUserId);
+
 			if (userByUserId.isDisabled() == false) {
 				return "redirect:/users/main";
 			} else {
 				System.out.println("장애인");
 				return "redirect:/users/main";
 			}
+
+
 		}
 
 		else {
@@ -245,6 +253,13 @@ public class UserController {
 	@PostMapping("/transfer")
 	public String transfer(HttpSession session, @ModelAttribute("Log") TransferDto log, BindingResult result,
 			RedirectAttributes redirectAttributes) {
+
+		// jmeter 디버깅을 위해 일단 하드코딩
+		User userByUserId = userService.getUserByUserId("junho1131" );
+
+		System.out.println("userByUserIduserByUserId"+userByUserId.getUserid());
+
+		session.setAttribute("user", userByUserId); // jmeter 디버깅을 위해 일단 하드코딩
 
 		User user = (User) session.getAttribute("user");
 		String userid = user.getUserid();

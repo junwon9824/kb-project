@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.BankAccountDto;
@@ -55,6 +56,8 @@ public class LogService {
 //
 //		return logsList;
 //	}
+
+	@Cacheable(value = "logCache", key = "#user.userid + '-' + #mybanknumber")
 	public List<Log> getlogs(User user, String mybanknumber) {
 		// 모든 로그를 가져옵니다.
 		List<Log> logs = logRepository.findAll();

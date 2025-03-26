@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.BookMarkDto;
@@ -32,7 +33,7 @@ public class BookMarkService {
 	public List<BookMark> getAllBookmarks() {
 		return bookMarkRepository.findAll();
 	}
-	
+
 	public List<BookMark> getAllBookMarkUserName(User user){
 		return bookMarkRepository.findAllByUser(user);
 	}

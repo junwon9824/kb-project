@@ -153,7 +153,10 @@ public class BankAccountService {
 
 		try {
 			// 비관적 락을 사용하여 계좌 정보를 가져옵니다.
+			BankAccount recipient_account = bankAccountRepository.findByAccountNumberWithLock( transferDto.getRecipient_banknumber());
+
 			BankAccount mybankAccount = bankAccountRepository.findByAccountNumberWithLock(transferDto.getSender_banknumber());
+
 
 			System.out.println("senderbanknum: " + transferDto.getSender_banknumber().toString());
 			System.out.println("sendername: " + transferDto.getSender_name());
@@ -177,7 +180,7 @@ public class BankAccountService {
 
 				Long recipientCurMoney = 0L;
 
-				BankAccount recieveraccount= this.getBankAccountByAccountnumber( transferDto.getRecipient_banknumber());
+				BankAccount recieveraccount= this.getBankAccountByAccountnumber( recipient_account.getAccountNumber() );
 
 				recipientCurMoney = recieveraccount.getAmount(); // 받는사람 현재 잔액
 //				BankAccount bankAccount = recieveraccount; // 받는사람 계좌

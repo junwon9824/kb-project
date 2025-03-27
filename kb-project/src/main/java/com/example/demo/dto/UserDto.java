@@ -38,8 +38,15 @@ public class UserDto {
 	private List<BankAccount> bankAccounts = new ArrayList<>();
 
 	public User toEntity() {
-		return User.builder().username(username).userid(userid).password(password).phone(phone).address(address)
-				.disabled(disabled).bankAccounts(bankAccounts).account_password(account_password).clientSafeIp(clientSafeIp).build();
+		return User.builder().username(username)
+				.userid(userid)
+				.password(password)
+				.phone(phone)
+				.address(address)
+				.disabled(disabled)
+				.bankAccounts(bankAccounts)
+				.account_password(account_password)
+				.clientSafeIp(clientSafeIp).build();
 
 	}
 }

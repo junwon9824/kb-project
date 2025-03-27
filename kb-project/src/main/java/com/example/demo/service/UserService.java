@@ -26,7 +26,7 @@ public class UserService {
 	public User createUser(UserDto user) {
 
 		User user2 = user.toEntity();
-		System.out.println("userservice");
+		System.out.println("userservice password"+user2.getPassword());
 		return userRepository.save(user2);
 	}
 

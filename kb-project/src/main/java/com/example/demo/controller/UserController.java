@@ -90,11 +90,15 @@ public class UserController {
 	@PostMapping("/users/new")
 	public String createUser(@Valid @ModelAttribute("user") UserDto userDto, BindingResult result,
 			HttpServletRequest request) {
+		System.out.println(" userDto.getUsername()"+ userDto.getUsername());
+
 		if (result.hasErrors()) {
 			return "user/new";
 		}
 		String clientIp = userService.getClientIp(request);
 		System.out.println("user Client ip : " + clientIp);
+		System.out.println("user password : " + userDto.getPassword());
+		System.out.println("user getUsername : " + userDto.getUsername());
 		userDto.setClientSafeIp(clientIp);
 		userService.createUser(userDto);
 		return "redirect:/users/index";
@@ -180,11 +184,11 @@ public class UserController {
 				return "redirect:/users/main";
 			}
 
-
 		}
 
 		else {
 			redirectAttributes.addFlashAttribute("errorMessage", "회원정보 오류");
+			System.out.println("회원정보오류");
 			return "redirect:/users/index";
 		}
 
@@ -256,10 +260,12 @@ public class UserController {
 
 		// jmeter 디버깅을 위해 일단 하드코딩
 		/// /////////////
-		User userByUserId = userService.getUserByUserId("junho1131" );
-
-		System.out.println("userByUserIduserByUserId"+userByUserId.getUserid());
-
+//		User userByUserId = userService.getUserByUserId("junho1131" );
+//
+//		System.out.println("userByUserIduserByUserId"+userByUserId.getUserid());
+//		session.setAttribute("user", userByUserId);
+//
+//
 //		log.setAccount_password("2");
 //		log.setAccount_password(userByUserId.getAccount_password());
 //		log.setSender_banknumber( "11");
@@ -267,9 +273,6 @@ public class UserController {
 //		log.setRecipient_banknumber("1");
 //		log.setRecipient_name("정준원");
 
-
-
-		session.setAttribute("user", userByUserId);
 /// //////////////////////
 		// jmeter 디버깅을 위해 일단 하드코딩
 

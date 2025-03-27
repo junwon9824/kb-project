@@ -50,11 +50,11 @@ public class LogController {
 
 
 		/// // jmeter 하드코딩
-		User userByUserId = userService.getUserByUserId("junho1131" );
+//		User userByUserId = userService.getUserByUserId("junho1131" );
 
-		System.out.println("userByUserIduserByUserId"+userByUserId.getUserid());
+//		System.out.println("userByUserIduserByUserId"+userByUserId.getUserid());
 
-		session.setAttribute("user", userByUserId);
+//		session.setAttribute("user", userByUserId);
 		/// // jmeter 하드코딩
 
 
@@ -88,11 +88,11 @@ public class LogController {
 		HttpSession session = request.getSession();
 
 		/// // jmeter 하드코딩
-		User userByUserId = userService.getUserByUserId("junho1131" );
-
-		System.out.println("userByUserIduserByUserId"+userByUserId.getUserid());
-
-		session.setAttribute("user", userByUserId);
+//		User userByUserId = userService.getUserByUserId("junho1131" );
+//
+//		System.out.println("userByUserIduserByUserId"+userByUserId.getUserid());
+//
+//		session.setAttribute("user", userByUserId);
 		/// // jmeter 하드코딩
 
 

@@ -259,12 +259,15 @@ public class UserController {
 		User userByUserId = userService.getUserByUserId("junho1131" );
 
 		System.out.println("userByUserIduserByUserId"+userByUserId.getUserid());
-		log.setAccount_password("2");
-		log.setAccount_password(userByUserId.getAccount_password());
-		log.setSender_banknumber( "11");
-		log.setAmount(1L);
-		log.setRecipient_banknumber("1");
-		log.setRecipient_name("정준원");
+
+//		log.setAccount_password("2");
+//		log.setAccount_password(userByUserId.getAccount_password());
+//		log.setSender_banknumber( "11");
+//		log.setAmount(1L);
+//		log.setRecipient_banknumber("1");
+//		log.setRecipient_name("정준원");
+
+
 
 		session.setAttribute("user", userByUserId);
 /// //////////////////////

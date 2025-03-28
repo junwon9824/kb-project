@@ -175,7 +175,7 @@ public class UserController {
 
 		if (userByUserId != null && login.getPassword().equals(userByUserId.getPassword())) {
 			session.setAttribute("user", userByUserId); // 세션에 사용자 정보 저장
-			System.out.println("session saveeee"+userByUserId);
+			System.out.println("session saveeeee"+userByUserId.getUserid());
 
 			if (userByUserId.isDisabled() == false) {
 				return "redirect:/users/main";
@@ -188,7 +188,7 @@ public class UserController {
 
 		else {
 			redirectAttributes.addFlashAttribute("errorMessage", "회원정보 오류");
-			System.out.println("회원정보오류");
+			System.out.println("회원정보오류"+userByUserId.getUserid() +" "+userByUserId.getUsername()+" "+userByUserId.getPassword());
 			return "redirect:/users/index";
 		}
 

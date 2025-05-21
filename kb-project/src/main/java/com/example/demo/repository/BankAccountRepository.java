@@ -21,7 +21,7 @@ public interface BankAccountRepository extends JpaRepository<BankAccount, Long> 
 
 	List<BankAccount> findAllByUserId(Long userid);
 
-//	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("SELECT b FROM BankAccount b WHERE b.accountNumber = :accountNumber")
 	BankAccount findByAccountNumberWithLock(@Param("accountNumber") String accountNumber);
 

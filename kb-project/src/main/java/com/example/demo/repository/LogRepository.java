@@ -9,4 +9,6 @@ import com.example.demo.entity.Log;
 public interface LogRepository extends JpaRepository<Log, Long> {
 
 
+
+//    List<Log> findByUserIdAndBanknumber(String userid, String mybanknumber);
 }

@@ -11,8 +11,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(new SessionInterceptor())
                 .addPathPatterns("/**") // 모든 경로에 대해 인터셉터 적용
                 .excludePathPatterns("/users/index", "/users/new") // 인덱스 페이지는 예외로 처리
-                .excludePathPatterns("/transfer" ,"/log/*","withoutcache/*"  ) // jmeter 테스트를 위한 transer 쪽 예외처리
+                .excludePathPatterns("/log/*","withoutcache/*"  ) // jmeter 테스트를 위한 transer 쪽 예외처리
+//                .excludePathPatterns("/transfer" ,"/log/*","withoutcache/*"  ) // jmeter 테스트를 위한 transer 쪽 예외처리
                 .excludePathPatterns("/assets/*", "/css/*", "/js/*");
      }
-    
 }

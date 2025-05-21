@@ -59,19 +59,25 @@ public class BankAccountController {
 	// User Clients send Data for Bank Accounts
 	@PostMapping("/bankaccounts")
 	public String createBankAccount(@ModelAttribute("bankAccount") BankAccount bankAccount,
-			HttpServletRequest request) {
+									HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 		String userid = user.getUserid();
+
 		String bankname = bankAccount.getBank().getBankname();
 		Bank bank = bankService.getBankBybankname(bankname);
 
+		System.out.println("user"+ userid +" make account getAccountNumber"+bankAccount.getAccountNumber() );
 		bankAccountService.createBankAccount(bankAccount, bank, user);
 
-		
+
 		return "redirect:/bankaccounts";
 
 	}
+//	accountNumber=${accountNumber}
+//	amount=1
+//	bank_id=1
+//	mainAccount=true
 
 	// User Bank Account Create FormPage
 	@GetMapping("/bankaccounts/create")

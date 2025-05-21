@@ -3,12 +3,15 @@ package com.example.demo.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import com.example.demo.entity.BankAccount;
 import com.example.demo.repository.BankAccountRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +27,7 @@ import com.example.demo.service.LogService;
 import com.example.demo.service.UserService;
 
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+@Slf4j
 
 @Controller
 public class UserController {
@@ -166,10 +170,47 @@ public class UserController {
 		return "user/index";
 
 	}
+//
+//	@GetMapping("/users/index")
+//	public String mainpageForm(Model model, HttpServletRequest request) {
+//
+//		// Authorization 헤더에서 JWT 토큰 추출
+//		String token = request.getHeader("Authorization");
+//
+//		if (token != null && token.startsWith("Bearer ")) {
+//			token = token.substring(7); // "Bearer "를 제외한 실제 토큰만 추출
+//		}
+//
+//		if (token != null) {
+//			try {
+//				// JWT 토큰 검증 및 사용자 정보 가져오기
+//				Claims claims = Jwts.parser()
+//						.setSigningKey("yourSecretKey") // JWT 생성 시 사용한 SecretKey
+//						.parseClaimsJws(token)
+//						.getBody();
+//
+//				// 사용자 정보를 UserDto로 매핑 (예시: UserDto에 필요한 정보)
+//				UserDto userDto = new UserDto();
+//				userDto.setUsername(claims.getSubject());
+//				// 필요한 다른 클레임들도 userDto에 설정
+//
+//				// 모델에 userDto 추가
+//				model.addAttribute("user", userDto);
+//
+//			} catch (Exception e) {
+//				// 토큰 검증 실패 시 처리 (예: 토큰 만료, 변조 등)
+//				model.addAttribute("error", "Invalid or expired token");
+//			}
+//		}
+//
+//		model.addAttribute("login", new Login());
+//		return "user/index";
+//	}
+
 
 	@PostMapping("/users/index")
 	public String mainpage(@ModelAttribute("login") Login login, RedirectAttributes redirectAttributes,
-			HttpSession session) {
+						   HttpSession session, HttpServletResponse response) {
 
 		User userByUserId = userService.getUserByUserId(login.getUserid());
 
@@ -178,6 +219,15 @@ public class UserController {
 			System.out.println("session saveeeee"+userByUserId.getUserid());
 
 			if (userByUserId.isDisabled() == false) {
+				log.info("not disabled");
+				// 세션 쿠키 수동 설정
+				Cookie cookie = new Cookie("JSESSIONID", session.getId());
+				cookie.setPath("/");  // 모든 경로에 대해 유효
+				cookie.setHttpOnly(true);  // JavaScript에서 접근 불가
+				cookie.setMaxAge(60 * 60*24);  // 24시간 동안 유효 (단위는 초)
+				response.addCookie(cookie); // 응답에 쿠키 추가
+				System.out.println("세션 ID: " + session.getId());
+
 				return "redirect:/users/main";
 			} else {
 				System.out.println("장애인");
@@ -309,6 +359,47 @@ public class UserController {
 		}
 
 	}
+
+
+
+	@PostMapping("/testtransfer")
+	public String transfer(@RequestParam("userId") String userId,
+						   @ModelAttribute("Log") TransferDto log,
+						   BindingResult result,
+						   RedirectAttributes redirectAttributes) {
+
+		// 세션 없이 userId로 직접 조회
+		User user = userService.getUserByUserId(userId);
+		if (user == null) {
+			System.out.println("usernulllll  userId"+userId);
+			redirectAttributes.addFlashAttribute("errorMessage", "유저를 찾을 수 없습니다.");
+			return "redirect:/transfer";
+		}
+
+		log.setUser(user);
+		log.setCategory("송금");
+		log.setSender_name(user.getUsername());
+
+		System.out.println("log.tostring" + log.toString());
+		System.out.println("user" + log.getUser().getUsername());
+		System.out.println("flag");
+
+		String account_password = log.getAccount_password();
+
+		boolean iscorrect = verifypassword(user, account_password);
+		if (!iscorrect) {
+			result.rejectValue("account_password", "password.mismatch", "비밀번호가 틀렸습니다.");
+			redirectAttributes.addFlashAttribute("errorMessage", "비밀번호 오류");
+			return "redirect:/transfer";
+		}
+
+		bankaccountservice.transferToUser(log, user);
+		redirectAttributes.addFlashAttribute("successMessage", "송금이 완료되었습니다.");
+		return "redirect:/users/main";
+	}
+
+
+
 
 	static boolean verifypassword(User user, String account_password) {
 

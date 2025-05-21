@@ -46,7 +46,7 @@ public class LogService {
 //	}
 
 
-    @CacheEvict(value = "logCache", key = "#logentity.user.userid + '-' + #logentity.user.id")
+    @CacheEvict(value = "logCache", key = "#logentity.user.userid + '-' + (#logentity.sender_banknumber == mybanknumber ? #logentity.sender_banknumber : #logentity.recipient_banknumber)")
     public void save(Log logentity) {
         logRepository.save(logentity); // 계좌 내역 저장
     }

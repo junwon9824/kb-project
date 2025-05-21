@@ -14,6 +14,7 @@ import com.example.demo.dto.LogDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
@@ -45,11 +46,14 @@ public class LogService {
 //		logRepository.save(logentity); // 계좌 내역 저장
 //	}
 
-
-    @CacheEvict(value = "logCache", key = "#logentity.user.userid + '-' + (#logentity.sender_banknumber == mybanknumber ? #logentity.sender_banknumber : #logentity.recipient_banknumber)")
+    @Caching(evict = {
+            @CacheEvict(value = "logCache", key = "#logentity.user.userid + '-' + #logentity.sender_banknumber"),
+            @CacheEvict(value = "logCache", key = "#logentity.user.userid + '-' + #logentity.recipient_banknumber")
+    })
     public void save(Log logentity) {
-        logRepository.save(logentity); // 계좌 내역 저장
+        logRepository.save(logentity);
     }
+
 
 
 //	public List<Log> getlogs(User user, String mybanknumber) {

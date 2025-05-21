@@ -201,7 +201,7 @@ public class BankAccountService {
 							.user(reciever)
 							.build();
 
-					System.out.println("transfergetdto sendername: " + transferGetDto.getSender_name());
+					System.out.println("transfergetdto sendername: 	" + transferGetDto.getSender_name());
 
 					Log logentityGet = transferGetDto.toEntity(); // 입금
 					System.out.println("logentityGet  : " +  logentityGet.getUser().getUserid() );

@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
@@ -25,5 +26,8 @@ public interface BankAccountRepository extends JpaRepository<BankAccount, Long> 
 	@Query("SELECT b FROM BankAccount b WHERE b.accountNumber = :accountNumber")
 	BankAccount findByAccountNumberWithLock(@Param("accountNumber") String accountNumber);
 
-
+	default Optional<BankAccount> findFirstByAccountNumber(String accountnumber) {
+        System.out.println("Debug: Searching for account number: " + accountnumber);
+        return Optional.ofNullable(findByAccountNumber(accountnumber));
+    }
 }

@@ -1,47 +1,38 @@
 package com.example.demo.entity;
 
-import java.util.ArrayList;
-import java.time.LocalDateTime;
-import java.util.*;
+import javax.persistence.*;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Getter
-
-@AllArgsConstructor
-@NoArgsConstructor
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class Log extends BaseEntity {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
 
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	private String recipient_name;
-	private String recipient_banknumber;
-	private String category;
-	private String sender_banknumber;
-	private String sender_name;
-	private Long amount;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
+    @Column(name = "recipient_name")
+    private String recipientName;
+
+    @Column(name = "recipient_banknumber")
+    private String recipientBankNumber;
+
+    private String category;
+
+    @Column(name = "sender_banknumber")
+    private String senderBankNumber;
+
+    @Column(name = "sender_name")
+    private String senderName;
+
+    private Long amount; // 또는 BigDecimal amount;
 }

@@ -29,10 +29,12 @@ public class RedisConfiguration {
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
-                .entryTtl(Duration.ofDays(1L)); // 기본 TTL을 1일로 설정
+                .entryTtl(Duration.ofDays(1L)) // 기본 TTL을 1일로 설정
+                .disableCachingNullValues(); // null 값 캐싱 방지
 
         return RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(redisConnectionFactory())
-                .cacheDefaults(redisCacheConfiguration).build();
+                .cacheDefaults(redisCacheConfiguration)
+                .build();
     }
 
 }

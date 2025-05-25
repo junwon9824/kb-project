@@ -75,7 +75,7 @@ public class BankAccountController {
 
 	}
 //	accountNumber=${accountNumber}
-//	amount=1
+//	amount=
 //	bank_id=1
 //	mainAccount=true
 

@@ -172,7 +172,8 @@ public class BankAccountService {
 				mybankAccount.setAmount(amount - sendamount); // 본인계좌
 
 				String recipientName = transferDto.getRecipient_name();
-				User reciever = userService.getUserByUsername(recipientName); // 받는사람
+				// 동명이인 처리: recipientName과 recipient_banknumber를 함께 사용하여 정확한 사용자 조회
+                User reciever = userService.getUserByUsernameAndBankAccount(recipientName, transferDto.getRecipient_banknumber()); // 받는사람
 
 				System.out.println("recipientName"+recipientName);
 

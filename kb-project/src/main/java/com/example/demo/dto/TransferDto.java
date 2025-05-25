@@ -26,6 +26,7 @@ public class TransferDto {
 	private String sender_banknumber;
 	private String sender_name;
 	private String account_password;
+	private String senderBankNumber;
 
 	private Long amount;
 
@@ -34,11 +35,11 @@ public class TransferDto {
 		Log log = new Log();
 		log.setUser(user);
 		log.setAmount(amount);
-		log.setSender_banknumber(sender_banknumber);
-		log.setRecipient_banknumber(recipient_banknumber);
-		log.setRecipient_name(recipient_name);
+		log.setSenderBankNumber(senderBankNumber);
+		log.setRecipientBankNumber(recipient_banknumber);
+		log.setRecipientName(recipient_name);
 		log.setCategory(category);
-		log.setSender_name(sender_name);
+		log.setSenderName(sender_name);
 
 		return log;
 	}

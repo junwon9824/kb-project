@@ -90,4 +90,14 @@ public class UserService {
 		return clientIp;
 	}
 
+	public User getUserByUsernameAndBankAccount(String username, String bankAccountNumber) {
+        // Example implementation: Adjust based on your actual repository structure
+        return userRepository.findAll().stream()
+                .filter(user -> user.getUsername().equals(username))
+                .filter(user -> user.getBankAccounts().stream()
+                        .anyMatch(account -> account.getAccountNumber().equals(bankAccountNumber)))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("User not found with the given username and bank account number"));
+    }
+
 }

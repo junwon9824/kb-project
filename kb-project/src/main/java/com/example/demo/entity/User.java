@@ -58,6 +58,9 @@ import lombok.ToString;
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private List<BankAccount> bankAccounts = new ArrayList<>();
 
+	public void setUserid(String userid) {
+        this.userid = userid;
+    }
 	
 	
 }

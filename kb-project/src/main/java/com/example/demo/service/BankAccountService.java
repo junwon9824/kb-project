@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
-
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.dto.BankAccountDto;
 import com.example.demo.dto.TransferDto;
@@ -18,13 +17,12 @@ import com.example.demo.repository.LogRepository;
 import com.example.demo.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class BankAccountService {
 
 	private final BankAccountRepository bankAccountRepository;
@@ -135,7 +133,7 @@ public class BankAccountService {
 		System.out.println("sender name2" + transferDto.getSender_name());
 
 		transferToUser(transferDto, sender);
-	}
+}
 
 //	{
 //
@@ -165,52 +163,56 @@ public class BankAccountService {
 			Long amount = mybankAccount.getAmount(); // 본인돈
 			Long sendamount = transferDto.getAmount(); // 보낼 돈 액수
 
+			Long originalAmount = mybankAccount.getAmount(); // 송금 전 잔액 저장
+            try {
+                if (amount - sendamount < 0) {
+                    System.out.println("잔액 부족");
+                } else {
+                    mybankAccount.setAmount(amount - sendamount); // 본인계좌
 
-			if (amount - sendamount < 0) {
-				System.out.println("잔액 부족");
-			} else {
-				mybankAccount.setAmount(amount - sendamount); // 본인계좌
+                    String recipientName = transferDto.getRecipient_name();
+                    User reciever = userService.getUserByUsernameAndBankAccount(recipientName, transferDto.getRecipient_banknumber()); // 받는사람
 
-				String recipientName = transferDto.getRecipient_name();
-				// 동명이인 처리: recipientName과 recipient_banknumber를 함께 사용하여 정확한 사용자 조회
-                User reciever = userService.getUserByUsernameAndBankAccount(recipientName, transferDto.getRecipient_banknumber()); // 받는사람
+                    System.out.println("recipientName" + recipientName);
 
-				System.out.println("recipientName"+recipientName);
+                    System.out.println("reciever" + reciever.getUserid());
 
-				System.out.println("reciever"+reciever.getUserid());
+                    Long recipientCurMoney = 0L;
 
-				Long recipientCurMoney = 0L;
+                    BankAccount recieveraccount = this.getBankAccountByAccountnumber(recipient_account.getAccountNumber());
 
-				BankAccount recieveraccount= this.getBankAccountByAccountnumber( recipient_account.getAccountNumber() );
+                    recipientCurMoney = recieveraccount.getAmount(); // 받는사람 현재 잔액
 
-				recipientCurMoney = recieveraccount.getAmount(); // 받는사람 현재 잔액
-//				BankAccount bankAccount = recieveraccount; // 받는사람 계좌
+                    if (recieveraccount != null) {
+                        recieveraccount.setAmount(recipientCurMoney + sendamount); // 받는사람 계좌 돈 증가
+                        updateBankAccount(mybankAccount.toDto()); // 내 계좌에 돈이 빠졌으니 업데이트
 
+                        Log logentity = transferDto.toEntity(); // 송금
+                        TransferDto transferGetDto = TransferDto.builder()
+                                .amount(transferDto.getAmount())
+                                .category("입금")
+                                .recipient_banknumber(transferDto.getRecipient_banknumber())
+                                .sender_banknumber(transferDto.getSender_banknumber())
+                                .sender_name(transferDto.getSender_name())
+                                .recipient_name(transferDto.getRecipient_name())
+                                .user(reciever)
+                                .build();
 
-				if (recieveraccount != null) {
-					recieveraccount.setAmount(recipientCurMoney + sendamount); // 받는사람 계좌 돈 증가
-					updateBankAccount(mybankAccount.toDto()); // 내 계좌에 돈이 빠졌으니 업데이트
+                        System.out.println("transfergetdto sendername: \t" + transferGetDto.getSender_name());
 
-					Log logentity = transferDto.toEntity(); // 송금
-					TransferDto transferGetDto = TransferDto.builder()
-							.amount(transferDto.getAmount())
-							.category("입금")
-							.recipient_banknumber(transferDto.getRecipient_banknumber())
-							.sender_banknumber(transferDto.getSender_banknumber())
-							.sender_name(transferDto.getSender_name())
-							.recipient_name(transferDto.getRecipient_name())
-							.user(reciever)
-							.build();
+                        Log logentityGet = transferGetDto.toEntity(); // 입금
+                        System.out.println("logentityGet  : " + logentityGet.getUser().getUserid());
 
-					System.out.println("transfergetdto sendername: 	" + transferGetDto.getSender_name());
-
-					Log logentityGet = transferGetDto.toEntity(); // 입금
-					System.out.println("logentityGet  : " +  logentityGet.getUser().getUserid() );
-
-					logService.save(logentity);
-					logService.save(logentityGet);
-				}
-			}
+                        logService.save(logentity);
+                        logService.save(logentityGet);
+                    }
+                }
+            } catch (Exception e) {
+                // 예외 발생 시 원래 잔액으로 복구
+                mybankAccount.setAmount(originalAmount);
+                System.err.println("예외 발생, 잔액 복구: " + e.getMessage());
+                throw e; // 예외 다시 던지기
+            }
 
 
 		} catch (PessimisticLockingFailureException e) {

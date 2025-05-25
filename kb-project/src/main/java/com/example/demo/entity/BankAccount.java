@@ -51,4 +51,15 @@ public class BankAccount extends BaseEntity {
 		return dto;
 	}
 
+	public void setBalance(Long amount) {
+        this.amount = amount;
+    }
+
+    public Long getBalance() {
+        return this.amount;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
 }

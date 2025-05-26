@@ -9,10 +9,25 @@ services:
     volumes:
       - redis-data:/data
     networks:
-      - redis-network
+      - app-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: my-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ssafy      # 원하는 비밀번호로 변경
+      MYSQL_DATABASE: kb_project                  # 원하는 DB 이름
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - app-network
 
 volumes:
   redis-data:
+  mysql-data:
 
 networks:
-  redis-network:
+  app-network:

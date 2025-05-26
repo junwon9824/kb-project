@@ -19,29 +19,28 @@ import lombok.ToString;
 @ToString
 public class TransferDto {
 
-	private User user;
-	private String recipient_name;
-	private String recipient_banknumber;
-	private String category;
-	private String sender_banknumber;
-	private String sender_name;
-	private String account_password;
-	private String senderBankNumber;
+    private User user;
 
-	private Long amount;
+    private String recipient_name;
+    private String recipient_banknumber;
+    private String category;
+    private String sender_banknumber;
+    private String sender_name;
+    private String account_password;
+    private String senderBankNumber;
 
-	public Log toEntity() {
+    private Long amount;
 
-		Log log = new Log();
-		log.setUser(user);
-		log.setAmount(amount);
-		log.setSenderBankNumber(senderBankNumber);
-		log.setRecipientBankNumber(recipient_banknumber);
-		log.setRecipientName(recipient_name);
-		log.setCategory(category);
-		log.setSenderName(sender_name);
-
-		return log;
-	}
+    public Log toEntity() {
+        Log log = new Log();
+        log.setUser(user);  // <-- Now works
+        log.setAmount(amount);
+        log.setSenderBankNumber(senderBankNumber);
+        log.setRecipientBankNumber(recipient_banknumber);
+        log.setRecipientName(recipient_name);
+        log.setCategory(category);
+        log.setSenderName(sender_name);
+        return log;
+    }
 
 }

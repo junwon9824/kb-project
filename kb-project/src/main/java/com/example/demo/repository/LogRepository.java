@@ -10,5 +10,7 @@ import com.example.demo.entity.User;
 public interface LogRepository extends JpaRepository<Log, Long> {
 
     List<Log> findByUserAndRecipientBankNumber(User user, String recipientBankNumber);
+
+    List<Log> findBySenderAccountAccountNumberOrRecipientAccountAccountNumber(String bankNumber, String bankNumber1);
     // List<Log> findByUserAndBankNumber(User user, String bankNumber);
 }

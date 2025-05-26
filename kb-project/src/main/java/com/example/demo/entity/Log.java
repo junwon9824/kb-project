@@ -1,11 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Getter
@@ -20,16 +16,27 @@ public class Log extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sender_id", nullable = false)
-    private User sender;
+    @JoinColumn(name = "sender_account_id", nullable = false)
+    private BankAccount senderAccount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipient_id", nullable = false)
-    private User recipient;
+    @JoinColumn(name = "recipient_account_id", nullable = false)
+    private BankAccount recipientAccount;
 
     @Column(nullable = false)
     private String category;
 
     @Column(nullable = false)
     private Long amount;
+
+    private String recipientName;
+    private String senderName;
+
+    public String getRecipientBankNumber() {
+        return recipientAccount != null ? recipientAccount.getAccountNumber() : null;
+    }
+
+    public String getSenderBankNumber() {
+        return senderAccount != null ? senderAccount.getAccountNumber() : null;
+    }
 }

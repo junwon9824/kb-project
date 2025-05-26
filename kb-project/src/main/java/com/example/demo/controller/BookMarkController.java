@@ -180,7 +180,6 @@ public class BookMarkController {
 		User user = (User) session.getAttribute("user");
 		String userid = user.getUserid();
 		TransferDto transferDto = new TransferDto();
-		transferDto.setUser(user);
 		transferDto.setRecipient_banknumber(recepientAccountNumber);
 		
 		BankAccount bankAccount = bankaccountservice.getBankAccountByAccountnumber(recepientAccountNumber);
@@ -210,11 +209,9 @@ public class BookMarkController {
 		User user = (User) session.getAttribute("user");
 		String userid = user.getUserid();
 
-		log.setUser(user);
 		log.setCategory("송금");
 		log.setSender_name(user.getUsername());
 		System.out.println(log);
-		System.out.println("user" + log.getUser().getUsername());
 		System.out.println("flag");
 
 		String account_password = log.getAccount_password();

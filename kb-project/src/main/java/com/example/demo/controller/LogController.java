@@ -64,7 +64,7 @@ public class LogController {
 
 		System.out.println("getlogof my account" + myaccountnumber);
 
-		List<LogDto> logs = logService.getlogs(user, myaccountnumber);
+		List<LogDto> logs = logService.getLogs(user.getUserid(), myaccountnumber);
 		
 
 		System.out.println("myaccountnumber" + myaccountnumber);
@@ -100,7 +100,7 @@ public class LogController {
 
 		System.out.println("getlogof my account" + myaccountnumber);
 
-		List<LogDto> logs = logService.getlogswithoutcache(user, myaccountnumber);
+		List<LogDto> logs = logService.getLogsWithoutCache(user.getUserid(), myaccountnumber);
 
 
 		System.out.println("myaccountnumber" + myaccountnumber);

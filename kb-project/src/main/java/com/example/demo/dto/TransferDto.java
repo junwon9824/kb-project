@@ -1,11 +1,10 @@
 package com.example.demo.dto;
 
 import com.example.demo.entity.Log;
-import com.example.demo.entity.User;
+import com.example.demo.entity.BankAccount;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,7 +18,8 @@ import lombok.ToString;
 @ToString
 public class TransferDto {
 
-    private User user;
+    private BankAccount senderAccount;      // 송금자 계좌
+    private BankAccount recipientAccount;   // 수신자 계좌
 
     private String recipient_name;
     private String recipient_banknumber;
@@ -27,16 +27,14 @@ public class TransferDto {
     private String sender_banknumber;
     private String sender_name;
     private String account_password;
-    private String senderBankNumber;
 
     private Long amount;
 
     public Log toEntity() {
         Log log = new Log();
-        log.setUser(user);  // <-- Now works
+        log.setSenderAccount(senderAccount);
+        log.setRecipientAccount(recipientAccount);
         log.setAmount(amount);
-        log.setSenderBankNumber(senderBankNumber);
-        log.setRecipientBankNumber(recipient_banknumber);
         log.setRecipientName(recipient_name);
         log.setCategory(category);
         log.setSenderName(sender_name);

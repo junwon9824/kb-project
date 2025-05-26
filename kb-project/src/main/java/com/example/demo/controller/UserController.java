@@ -288,7 +288,6 @@ public class UserController {
 		Long userId = user.getId();
 		System.out.println("유저 아이디" + userId);
 		TransferDto transferDto = new TransferDto();
-		transferDto.setUser(user2.get());
 		List<BankAccount> bankAccounts = bankAccountRepository.findAllByUserId(userId);
 		System.out.println(bankAccounts);
 

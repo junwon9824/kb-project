@@ -1,23 +1,26 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.BankAccountDto;
-import com.example.demo.dto.TransferDto;
-import com.example.demo.entity.*;
-import com.example.demo.repository.BankAccountRepository;
-import com.example.demo.repository.LogRepository;
-import com.example.demo.repository.UserRepository;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import com.example.demo.dto.BankAccountDto;
+import com.example.demo.dto.TransferDto;
+import com.example.demo.entity.Bank;
+import com.example.demo.entity.BankAccount;
+import com.example.demo.entity.BookMark;
+import com.example.demo.entity.Log;
+import com.example.demo.entity.User;
+import com.example.demo.repository.BankAccountRepository;
+import com.example.demo.repository.LogRepository;
+import com.example.demo.repository.UserRepository;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -85,7 +88,6 @@ public class BankAccountService {
 				.recipient_name(bookMark.getBookMarkName())
 				.sender_banknumber(sender.getBankAccounts().get(0).getAccountNumber())
 				.sender_name(sender.getUsername())
-				.user(sender)
 				.build();
 
 		transferToUser(dto, sender);
@@ -165,12 +167,28 @@ public class BankAccountService {
 		});
 	}
 
+	public void setmainAccount(BankAccountDto dto) {
+		List<BankAccount> allAccounts = bankAccountRepository.findAll();
+
+		allAccounts.stream()
+				.filter(BankAccount::isMainAccount)
+				.forEach(acc -> {
+					acc.setMainAccount(false);
+					bankAccountRepository.save(acc);
+				});
+
+		bankAccountRepository.findById(dto.getId()).ifPresent(account -> {
+			account.setMainAccount(true);
+			bankAccountRepository.save(account);
+		});
+	}
+
 	public List<BankAccount> getBankAccountByuserId(User user) {
 		return getBankAccountByUser(user);
 	}
 
 	public BankAccount getBankAccountByAccountId(Long id) {
-        return bankAccountRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("BankAccount not found with id: " + id));
-    }
+		return bankAccountRepository.findById(id)
+				.orElseThrow(() -> new IllegalArgumentException("BankAccount not found with id: " + id));
+	}
 }

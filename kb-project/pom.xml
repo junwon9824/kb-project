@@ -14,9 +14,10 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>kb-project</name>
     <description>Demo project for Spring Boot</description>
-    <properties>
-        <java.version>11</java.version>
-    </properties>
+	<properties>
+		<java.version>11</java.version>
+		<jakarta.version>9.1.0</jakarta.version>
+	</properties>
     <dependencies>
 
 
@@ -109,6 +110,7 @@
         <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.0</version>
         </dependency>
 
 

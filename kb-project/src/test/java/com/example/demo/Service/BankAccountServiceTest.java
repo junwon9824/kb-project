@@ -18,6 +18,7 @@ import com.example.demo.dto.TransferDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.repository.UserRepository;
 
@@ -100,6 +101,7 @@ class BankAccountServiceTest {
     // }
 
     @Test
+    @Rollback(false)
     void testTransferUsingExistingDatabaseUsers() {
         // Arrange
         String senderAccountNumber = "9824"; // Replace with actual sender account number in DB

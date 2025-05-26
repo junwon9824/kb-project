@@ -1,9 +1,3 @@
-package com.example.demo.entity;
-
-import javax.persistence.*;
-
-import lombok.*;
-
 @Entity
 @Getter
 @Setter
@@ -17,22 +11,14 @@ public class Log extends BaseEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "sender_id")
+    private User sender;
 
-    @Column(name = "recipient_name")
-    private String recipientName;
-
-    @Column(name = "recipient_banknumber")
-    private String recipientBankNumber;
+    @ManyToOne
+    @JoinColumn(name = "recipient_id")
+    private User recipient;
 
     private String category;
 
-    @Column(name = "sender_banknumber")
-    private String senderBankNumber;
-
-    @Column(name = "sender_name")
-    private String senderName;
-
-    private Long amount; // 또는 BigDecimal amount;
+    private Long amount;
 }

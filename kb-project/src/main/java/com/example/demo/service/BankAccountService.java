@@ -168,4 +168,9 @@ public class BankAccountService {
 	public List<BankAccount> getBankAccountByuserId(User user) {
 		return getBankAccountByUser(user);
 	}
+
+	public BankAccount getBankAccountByAccountId(Long id) {
+        return bankAccountRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("BankAccount not found with id: " + id));
+    }
 }

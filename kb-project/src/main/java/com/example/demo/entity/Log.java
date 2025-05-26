@@ -1,13 +1,13 @@
-
 package com.example.demo.entity;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@jakarta.persistence.Entity
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,19 +15,21 @@ import lombok.ToString;
 @ToString
 public class Log extends BaseEntity {
 
-    @jakarta.persistence.Id
-    @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @jakarta.persistence.ManyToOne
-    @jakarta.persistence.JoinColumn(name = "sender_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sender_id", nullable = false)
     private User sender;
 
-    @jakarta.persistence.ManyToOne
-    @jakarta.persistence.JoinColumn(name = "recipient_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipient_id", nullable = false)
     private User recipient;
 
+    @Column(nullable = false)
     private String category;
 
+    @Column(nullable = false)
     private Long amount;
 }

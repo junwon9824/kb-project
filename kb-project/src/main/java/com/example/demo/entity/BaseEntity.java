@@ -2,7 +2,7 @@ package com.example.demo.entity;
 
 import java.util.Date;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @MappedSuperclass
 public abstract class BaseEntity {

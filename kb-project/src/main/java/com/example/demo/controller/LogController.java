@@ -1,30 +1,21 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.BankAccountDto;
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 import com.example.demo.dto.LogDto;
-import com.example.demo.entity.Bank;
-import com.example.demo.entity.BankAccount;
-import com.example.demo.entity.Log;
 import com.example.demo.entity.User;
-import com.example.demo.repository.BankAccountRepository;
 import com.example.demo.service.BankAccountService;
 import com.example.demo.service.BankService;
 import com.example.demo.service.LogService;
 import com.example.demo.service.UserService;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.ws.rs.Path;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class LogController {
@@ -48,24 +39,19 @@ public class LogController {
 
 		HttpSession session = request.getSession();
 
-
 		/// // jmeter 하드코딩
-//		User userByUserId = userService.getUserByUserId("junho1131" );
+		// User userByUserId = userService.getUserByUserId("junho1131" );
 
-//		System.out.println("userByUserIduserByUserId"+userByUserId.getUserid());
+		// System.out.println("userByUserIduserByUserId"+userByUserId.getUserid());
 
-//		session.setAttribute("user", userByUserId);
+		// session.setAttribute("user", userByUserId);
 		/// // jmeter 하드코딩
-
 
 		User user = (User) session.getAttribute("user");
-
-
 
 		System.out.println("getlogof my account" + myaccountnumber);
 
 		List<LogDto> logs = logService.getLogs(user.getUserid(), myaccountnumber);
-		
 
 		System.out.println("myaccountnumber" + myaccountnumber);
 		System.out.println("logs" + logs.toString());
@@ -83,25 +69,23 @@ public class LogController {
 
 	@GetMapping("/withoutcache/log/{myaccountnumber}") //
 	public String getlogswithoutcahce(@PathVariable("myaccountnumber") String myaccountnumber, Model model,
-						  HttpServletRequest request) {
+			HttpServletRequest request) {
 
 		HttpSession session = request.getSession();
 
 		/// // jmeter 하드코딩
-//		User userByUserId = userService.getUserByUserId("junho1131" );
-//
-//		System.out.println("userByUserIduserByUserId"+userByUserId.getUserid());
-//
-//		session.setAttribute("user", userByUserId);
+		// User userByUserId = userService.getUserByUserId("junho1131" );
+		//
+		// System.out.println("userByUserIduserByUserId"+userByUserId.getUserid());
+		//
+		// session.setAttribute("user", userByUserId);
 		/// // jmeter 하드코딩
-
 
 		User user = (User) session.getAttribute("user");
 
 		System.out.println("getlogof my account" + myaccountnumber);
 
 		List<LogDto> logs = logService.getLogsWithoutCache(user.getUserid(), myaccountnumber);
-
 
 		System.out.println("myaccountnumber" + myaccountnumber);
 		System.out.println("logs" + logs.toString());

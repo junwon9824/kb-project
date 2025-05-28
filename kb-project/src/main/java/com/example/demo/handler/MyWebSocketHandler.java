@@ -3,8 +3,6 @@ package com.example.demo.handler;
 import java.net.InetSocketAddress;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -12,15 +10,17 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.example.demo.dto.GPTResponseDto;
+import com.example.demo.entity.BankAccount;
+import com.example.demo.entity.BookMark;
+import com.example.demo.entity.User;
 import com.example.demo.service.BankAccountService;
 import com.example.demo.service.BookMarkService;
 import com.example.demo.service.GPTChatRestService;
 import com.example.demo.service.LogService;
 import com.example.demo.service.UserService;
-import com.example.demo.dto.GPTResponseDto;
-import com.example.demo.entity.BankAccount;
-import com.example.demo.entity.BookMark;
-import com.example.demo.entity.User;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Component
 public class MyWebSocketHandler extends TextWebSocketHandler {
@@ -39,7 +39,7 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
 
 	@Autowired
 	GPTChatRestService gptChatRestService; // chat gpt rest api
-	
+
 	static private HttpServletRequest request;
 
 	static long amount;
@@ -57,8 +57,8 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		System.out.println("연결 시도중");
-		userState = UserState.INITIAL; // 현재는 초기상태    
-	    InetSocketAddress clientAddress = session.getRemoteAddress();
+		userState = UserState.INITIAL; // 현재는 초기상태
+		InetSocketAddress clientAddress = session.getRemoteAddress();
 		clientIp = clientAddress.getAddress().getHostAddress();
 		System.out.println("clientIp: " + clientIp);
 	}
@@ -98,23 +98,21 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
 		else
 			action = "etc";
 
- 		System.out.println("socket received action : " + action);
+		System.out.println("socket received action : " + action);
 
 		if (userState == UserState.INITIAL) {
 			System.out.println(clientIp);
 			System.out.println(user.getClientSafeIp());
-			
+
 			if (action.equals("송금")) {
 				if (bookMarkService.findByUserAndBookMarkName(user, name) == null) {
 					session.sendMessage(new TextMessage(name + "은 즐겨찾기에 존재하지 않는 사용자입니다. 다시 말씀해주세요."));
-				}
-				else if(!clientIp.equals(user.getClientSafeIp())) {
+				} else if (!clientIp.equals(user.getClientSafeIp())) {
 					session.sendMessage(new TextMessage("인가되지 않은 사용자의 PC 입니다."));
-				}
-				else {
+				} else {
 					session.sendMessage(new TextMessage(name + "에게 " + amount + "원 송금하시겠습니까?")); // Client에게 값 전송
 					userState = UserState.WAITING_CONFIRMATION;
-				} 
+				}
 			}
 
 			else if (action.equals("조회")) {
@@ -132,7 +130,7 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
 				List<BookMark> bookMarkUsers = bookMarkService.getAllBookMarkUserName(user);
 				String msg = "현재 즐겨찾기에 추가된 사용자는 ";
 				for (BookMark bookMarkUser : bookMarkUsers) {
-					if(bookMarkService.findByUserAndBookMarkName(user, bookMarkUser.getBookMarkName()) != null){
+					if (bookMarkService.findByUserAndBookMarkName(user, bookMarkUser.getBookMarkName()) != null) {
 						msg += " " + bookMarkUser.getBookMarkBankname() + "은행의 " + bookMarkUser.getBookMarkName();
 					}
 				}

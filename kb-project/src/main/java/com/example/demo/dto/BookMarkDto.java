@@ -1,8 +1,8 @@
 package com.example.demo.dto;
 
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 import com.example.demo.entity.BookMark;
 import com.example.demo.entity.User;

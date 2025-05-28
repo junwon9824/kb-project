@@ -1,13 +1,14 @@
 package com.example.demo;
 
-import com.example.demo.entity.BankAccount;
-import com.example.demo.entity.User;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
- 
+import com.example.demo.entity.BankAccount;
+import com.example.demo.entity.User;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+
 @Component
 @Transactional
 public class Testdata {

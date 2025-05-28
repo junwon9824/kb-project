@@ -3,11 +3,11 @@ package com.example.demo.controller;
 import java.util.List;
 import java.util.Optional;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 import com.example.demo.entity.BankAccount;
 import com.example.demo.repository.BankAccountRepository;
@@ -311,13 +311,11 @@ public class UserController {
 		User user = (User) session.getAttribute("user");
 		String userid = user.getUserid();
 
-		log.setUser(user);
 		log.setCategory("송금");
 		log.setSender_name(user.getUsername());
-		log.setSender_banknumber(log.getSenderBankNumber()); // Add this line
+		log.setSender_banknumber(log.getSender_banknumber()); // Add this line
 
 		System.out.println("log.tostring" + log.toString());
-		System.out.println("user" + log.getUser().getUsername());
 		System.out.println("flag");
 
 		String account_password = log.getAccount_password();
@@ -358,12 +356,10 @@ public class UserController {
 			return "redirect:/transfer";
 		}
 
-		log.setUser(user);
 		log.setCategory("송금");
 		log.setSender_name(user.getUsername());
 
 		System.out.println("log.tostring" + log.toString());
-		System.out.println("user" + log.getUser().getUsername());
 		System.out.println("flag");
 
 		String account_password = log.getAccount_password();

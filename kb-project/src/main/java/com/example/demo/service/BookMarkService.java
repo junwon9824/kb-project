@@ -2,15 +2,14 @@ package com.example.demo.service;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.BookMarkDto;
 import com.example.demo.entity.BookMark;
 import com.example.demo.entity.User;
 import com.example.demo.repository.BookMarkRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class BookMarkService {
@@ -34,7 +33,7 @@ public class BookMarkService {
 		return bookMarkRepository.findAll();
 	}
 
-	public List<BookMark> getAllBookMarkUserName(User user){
+	public List<BookMark> getAllBookMarkUserName(User user) {
 		return bookMarkRepository.findAllByUser(user);
 	}
 
@@ -71,7 +70,7 @@ public class BookMarkService {
 	public BookMark findBookMarkByName(String name) {
 		return bookMarkRepository.findByBookMarkName(name);
 	}
-	
+
 	public BookMark findByUserAndBookMarkName(User user, String bookMarkName) {
 		return bookMarkRepository.findByUserAndBookMarkName(user, bookMarkName);
 	}

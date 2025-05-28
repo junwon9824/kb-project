@@ -3,10 +3,9 @@ package com.example.demo.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.*;
-
 import com.example.demo.dto.BankAccountDto;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity

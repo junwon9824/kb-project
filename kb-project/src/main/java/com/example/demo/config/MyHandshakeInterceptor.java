@@ -6,7 +6,7 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
 
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 import java.util.Map;
 
 public class MyHandshakeInterceptor implements HandshakeInterceptor { // 3 handshake를 interceptor하여 http session 획득
@@ -18,7 +18,7 @@ public class MyHandshakeInterceptor implements HandshakeInterceptor { // 3 hands
 		HttpSessionHandshakeInterceptor httpSessionInterceptor = new HttpSessionHandshakeInterceptor();
 
 		if (httpSessionInterceptor.beforeHandshake(request, response, wsHandler, attributes)) {
-			HttpSession httpSession = (HttpSession) attributes.get("javax.servlet.http.HttpSession");
+			HttpSession httpSession = (HttpSession) attributes.get("jakarta.servlet.http.HttpSession");
 			attributes.put("HTTP_SESSION", httpSession);
 			return true;
 		}

@@ -3,7 +3,7 @@ package com.example.demo.service;
 import java.util.List;
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class UserService {
 	public User createUser(UserDto user) {
 
 		User user2 = user.toEntity();
-		System.out.println("userservice password"+user2.getPassword());
+		System.out.println("userservice password" + user2.getPassword());
 		return userRepository.save(user2);
 	}
 
@@ -66,11 +66,11 @@ public class UserService {
 	}
 
 	public User getUserByUsername(String username) {
-		System.out.println("username"+ username);
+		System.out.println("username" + username);
 
 		User user = userRepository.findByUsername(username);
 
-		System.out.println("findbyusername"+user.getUserid());
+		System.out.println("findbyusername" + user.getUserid());
 		return user;
 
 	}
@@ -91,13 +91,14 @@ public class UserService {
 	}
 
 	public User getUserByUsernameAndBankAccount(String username, String bankAccountNumber) {
-        // Example implementation: Adjust based on your actual repository structure
-        return userRepository.findAll().stream()
-                .filter(user -> user.getUsername().equals(username))
-                .filter(user -> user.getBankAccounts().stream()
-                        .anyMatch(account -> account.getAccountNumber().equals(bankAccountNumber)))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("User not found with the given username and bank account number"));
-    }
+		// Example implementation: Adjust based on your actual repository structure
+		return userRepository.findAll().stream()
+				.filter(user -> user.getUsername().equals(username))
+				.filter(user -> user.getBankAccounts().stream()
+						.anyMatch(account -> account.getAccountNumber().equals(bankAccountNumber)))
+				.findFirst()
+				.orElseThrow(() -> new IllegalArgumentException(
+						"User not found with the given username and bank account number"));
+	}
 
 }

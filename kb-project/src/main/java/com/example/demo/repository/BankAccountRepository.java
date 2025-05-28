@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.entity.BankAccount;
 import com.example.demo.entity.User;
 
-import javax.persistence.LockModeType;
+import jakarta.persistence.LockModeType;
 
 @Repository
 public interface BankAccountRepository extends JpaRepository<BankAccount, Long> {
@@ -27,7 +27,7 @@ public interface BankAccountRepository extends JpaRepository<BankAccount, Long> 
 	BankAccount findByAccountNumberWithLock(@Param("accountNumber") String accountNumber);
 
 	default Optional<BankAccount> findFirstByAccountNumber(String accountnumber) {
-        System.out.println("Debug: Searching for account number: " + accountnumber);
-        return Optional.ofNullable(findByAccountNumber(accountnumber));
-    }
+		System.out.println("Debug: Searching for account number: " + accountnumber);
+		return Optional.ofNullable(findByAccountNumber(accountnumber));
+	}
 }

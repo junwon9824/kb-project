@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class BankAccountController {
@@ -44,11 +44,11 @@ public class BankAccountController {
 
 		model.addAttribute("bankAccounts", bankAccounts);
 
-		if (user.isDisabled()) {//장애인
+		if (user.isDisabled()) {// 장애인
 
 			return "bankaccount/list2";
 
-		} else {//비장애인
+		} else {// 비장애인
 			return "bankaccount/list";
 
 		}
@@ -59,7 +59,7 @@ public class BankAccountController {
 	// User Clients send Data for Bank Accounts
 	@PostMapping("/bankaccounts")
 	public String createBankAccount(@ModelAttribute("bankAccount") BankAccount bankAccount,
-									HttpServletRequest request) {
+			HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 		String userid = user.getUserid();
@@ -67,36 +67,35 @@ public class BankAccountController {
 		String bankname = bankAccount.getBank().getBankname();
 		Bank bank = bankService.getBankBybankname(bankname);
 
-		System.out.println("user"+ userid +" make account getAccountNumber"+bankAccount.getAccountNumber() );
+		System.out.println("user" + userid + " make account getAccountNumber" + bankAccount.getAccountNumber());
 		bankAccountService.createBankAccount(bankAccount, bank, user);
-
 
 		return "redirect:/bankaccounts";
 
 	}
-//	accountNumber=${accountNumber}
-//	amount=
-//	bank_id=1
-//	mainAccount=true
+	// accountNumber=${accountNumber}
+	// amount=
+	// bank_id=1
+	// mainAccount=true
 
 	// User Bank Account Create FormPage
 	@GetMapping("/bankaccounts/create")
 	public String createBankAccountform(Model model) {
 		model.addAttribute("bankAccount", new BankAccount());
-		
+
 		return "bankaccount/create";
 
 	}
-	
+
 	@GetMapping("/bankaccounts/create2")
 	public String createBankAccountform2(Model model) {
 		model.addAttribute("bankAccount", new BankAccount());
-		
+
 		return "bankaccount/create2";
-		
+
 	}
 
-//계좌 생성
+	// 계좌 생성
 	@PostMapping("/bankaccounts/create")
 	public String createBankAccount(HttpServletRequest request,
 			@ModelAttribute("bankaccount") BankAccount bankAccount) {

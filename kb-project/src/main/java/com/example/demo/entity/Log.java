@@ -1,7 +1,18 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
@@ -16,12 +27,12 @@ public class Log extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sender_account_id", nullable = false)
-    private BankAccount senderAccount;
+    @JoinColumn(name = "sender_id", nullable = false)
+    private User sender;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipient_account_id", nullable = false)
-    private BankAccount recipientAccount;
+    @JoinColumn(name = "recipient_id", nullable = false)
+    private User recipient;
 
     @Column(nullable = false)
     private String category;
@@ -29,14 +40,49 @@ public class Log extends BaseEntity {
     @Column(nullable = false)
     private Long amount;
 
+    private String senderBankNumber;
+    private String recipientBankNumber;
+
     private String recipientName;
     private String senderName;
 
+    public User getUser() {
+        return sender;
+    }
+
     public String getRecipientBankNumber() {
-        return recipientAccount != null ? recipientAccount.getAccountNumber() : null;
+        return recipient.getBankAccounts().get(0).getAccountNumber();
     }
 
     public String getSenderBankNumber() {
-        return senderAccount != null ? senderAccount.getAccountNumber() : null;
+        return sender.getBankAccounts().get(0).getAccountNumber();
+    }
+
+    public String getRecipientName() {
+        return recipient.getUsername();
+    }
+
+    public String getSenderName() {
+        return sender.getUsername();
+    }
+
+    public void setUser(User user) {
+        this.sender = user;
+    }
+
+    public void setSenderBankNumber(String senderBankNumber) {
+        this.senderBankNumber = senderBankNumber;
+    }
+
+    public void setRecipientBankNumber(String recipientBankNumber) {
+        this.recipientBankNumber = recipientBankNumber;
+    }
+
+    public void setRecipientName(String recipientName) {
+        this.recipientName = recipientName;
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
     }
 }

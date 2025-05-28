@@ -74,4 +74,8 @@ public class BankAccount extends BaseEntity {
 	public void setAccountNumber(String accountNumber) {
 		this.accountNumber = accountNumber;
 	}
+
+	public User getUser() {
+		return this.user;
+	}
 }

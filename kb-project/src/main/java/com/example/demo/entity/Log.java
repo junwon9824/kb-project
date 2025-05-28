@@ -27,62 +27,29 @@ public class Log extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sender_id", nullable = false)
-    private User sender;
+    @JoinColumn(name = "sender_account_id")
+    private BankAccount senderAccount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipient_id", nullable = false)
-    private User recipient;
+    @JoinColumn(name = "recipient_account_id")
+    private BankAccount recipientAccount;
 
     @Column(nullable = false)
-    private String category;
+    public String category;
 
     @Column(nullable = false)
-    private Long amount;
+    public Long amount;
 
-    private String senderBankNumber;
-    private String recipientBankNumber;
+    public String senderBankNumber;
+    public String recipientBankNumber;
 
-    private String recipientName;
-    private String senderName;
+    public String recipientName;
+    public String senderName;
 
-    public User getUser() {
-        return sender;
-    }
-
-    public String getRecipientBankNumber() {
-        return recipient.getBankAccounts().get(0).getAccountNumber();
-    }
-
-    public String getSenderBankNumber() {
-        return sender.getBankAccounts().get(0).getAccountNumber();
-    }
-
-    public String getRecipientName() {
-        return recipient.getUsername();
-    }
-
-    public String getSenderName() {
-        return sender.getUsername();
-    }
-
-    public void setUser(User user) {
-        this.sender = user;
-    }
-
-    public void setSenderBankNumber(String senderBankNumber) {
-        this.senderBankNumber = senderBankNumber;
-    }
-
-    public void setRecipientBankNumber(String recipientBankNumber) {
-        this.recipientBankNumber = recipientBankNumber;
-    }
-
-    public void setRecipientName(String recipientName) {
-        this.recipientName = recipientName;
-    }
-
-    public void setSenderName(String senderName) {
-        this.senderName = senderName;
-    }
+    public void setAmount(Long amount) { this.amount = amount; }
+    public void setRecipientName(String recipientName) { this.recipientName = recipientName; }
+    public void setCategory(String category) { this.category = category; }
+    public void setSenderName(String senderName) { this.senderName = senderName; }
+    public void setSenderBankNumber(String senderBankNumber) { this.senderBankNumber = senderBankNumber; }
+    public void setRecipientBankNumber(String recipientBankNumber) { this.recipientBankNumber = recipientBankNumber; }
 }

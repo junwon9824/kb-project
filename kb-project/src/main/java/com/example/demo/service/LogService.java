@@ -9,7 +9,7 @@ import org.springframework.cache.annotation.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
-import java.util.*  ;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -34,16 +34,16 @@ public class LogService {
 //        logRepository.save(log);
 //    }
     @Caching(evict = {
-            @CacheEvict(value = "logCache", key = "#log.senderAccount.user.userid + '-' + #log.senderBankNumber"),
-            @CacheEvict(value = "logCache", key = "#log.recipientAccount.user.userid + '-' + #log.recipientBankNumber")
+        @CacheEvict(value = "logCache", key = "#log.senderAccount.user.userid + '-' + #log.senderBankNumber"),
+        @CacheEvict(value = "logCache", key = "#log.recipientAccount.user.userid + '-' + #log.recipientBankNumber")
     })
     public void save(Log log) {
         logRepository.save(log);
     }
 
     /**
-     * DB에서 직접 조회 (senderAccount 또는 recipientAccount의 계좌번호와 일치하는 로그)
-     * => User는 인증된 사용자용, 여기서는 검증 로직에 따라 필터링 추가 가능
+     * DB에서 직접 조회 (senderAccount 또는 recipientAccount의 계좌번호와 일치하는 로그) => User는
+     * 인증된 사용자용, 여기서는 검증 로직에 따라 필터링 추가 가능
      */
     public List<LogDto> getLogsWithoutCache(String userId, String bankNumber) {
         // 예: 리포지토리 메서드 호출 (직접 쿼리 만들어야 함)
@@ -52,20 +52,20 @@ public class LogService {
         // userId로 필터링(예: 송금/수신자 계좌 소유자가 맞는지)
         List<Log> filtered = logs.stream()
                 .filter(log -> log.getSenderAccount().getUser().getUserid().equals(userId)
-                        || log.getRecipientAccount().getUser().getUserid().equals(userId))
+                || log.getRecipientAccount().getUser().getUserid().equals(userId))
                 .sorted(Comparator.comparing(Log::getCreatedDate).reversed())
                 .collect(Collectors.toList());
 
         return filtered.stream()
                 .map(log -> LogDto.builder()
-                        .amount(log.getAmount())
-                        .recipient_banknumber(log.getRecipientBankNumber())
-                        .category(log.getCategory())
-                        .sender_banknumber(log.getSenderBankNumber())
-                        .recipient_name(log.getRecipientName())
-                        .sender_name(log.getSenderName())
-                        .createdDate(log.getCreatedDate())
-                        .build())
+                .amount(log.getAmount())
+                .recipient_banknumber(log.getRecipientBankNumber())
+                .category(log.getCategory())
+                .sender_banknumber(log.getSenderBankNumber())
+                .recipient_name(log.getRecipientName())
+                .sender_name(log.getSenderName())
+                .createdDate(log.getCreatedDate())
+                .build())
                 .collect(Collectors.toList());
     }
 

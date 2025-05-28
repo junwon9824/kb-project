@@ -32,12 +32,12 @@ public class TransferDto {
 
     public Log toEntity() {
         Log log = new Log();
-        log.setSenderAccount(senderAccount);
-        log.setRecipientAccount(recipientAccount);
-        log.setAmount(amount);
-        log.setRecipientName(recipient_name);
-        log.setCategory(category);
-        log.setSenderName(sender_name);
+        log.sender = senderAccount.getUser();
+        log.recipient = recipientAccount.getUser();
+        log.amount = amount;
+        log.recipientName = recipient_name;
+        log.category = category;
+        log.senderName = sender_name;
         return log;
     }
 

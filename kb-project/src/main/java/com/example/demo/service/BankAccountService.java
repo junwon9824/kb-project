@@ -22,6 +22,9 @@ import com.example.demo.repository.BankAccountRepository;
 import com.example.demo.repository.LogRepository;
 import com.example.demo.repository.UserRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class BankAccountService {
@@ -96,6 +99,7 @@ public class BankAccountService {
 	@Transactional
 	public void transferToUser(TransferDto dto, User sender) {
 		try {
+			log.info("after ttttry " + dto.toString());
 			BankAccount senderAcc = Optional
 					.ofNullable(bankAccountRepository.findByAccountNumberWithLock(dto.getSender_banknumber()))
 					.orElseThrow(() -> new IllegalArgumentException("송금자 계좌 없음"));
@@ -114,16 +118,24 @@ public class BankAccountService {
 			try {
 				// 잔액 차감 및 수신자 금액 증가
 				senderAcc.setAmount(originalSenderAmount - sendAmount);
+				log.info("after senderAcccccc");
 
 				User recipientUser = userService.getUserByUsernameAndBankAccount(dto.getRecipient_name(),
 						recipientAcc.getAccountNumber());
 
 				recipientAcc.setAmount(recipientAcc.getAmount() + sendAmount);
+				log.info("after recipientAcc");
 
 				updateBankAccount(senderAcc.toDto());
 				updateBankAccount(recipientAcc.toDto());
 
+				log.info("before sender logggg");
+				log.info("dto.tostring()))))", dto.toString());
+
 				Log senderLog = dto.toEntity(); // 송금 로그
+				log.info("before recipientLog logggg" + recipientAcc.toString());
+				log.info("after senderLog logggg" + senderLog.toString());
+
 				Log recipientLog = TransferDto.builder()
 						.amount(dto.getAmount())
 						.category("입금")
@@ -131,8 +143,15 @@ public class BankAccountService {
 						.sender_banknumber(dto.getSender_banknumber())
 						.sender_name(dto.getSender_name())
 						.recipient_name(dto.getRecipient_name())
+						.recipientAccount(recipientAcc)
+						.senderAccount(senderAcc)
 						.build()
 						.toEntity(); // 입금 로그
+				log.info("before logService ");
+
+				senderLog.setCategory("송금");
+				log.info("senderLogsenderLog" + senderLog.toString());
+				log.info("recipientLogrecipientLog" + recipientLog.toString());
 
 				logService.save(senderLog);
 				logService.save(recipientLog);

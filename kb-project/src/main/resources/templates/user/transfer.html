@@ -23,14 +23,15 @@
 				<label for="recipient_banknumber" class="form-label">받는사람
 					계좌번호:</label> <input type="text" class="form-control"
 					id="recipient_banknumber" th:field="*{recipient_banknumber}"
-					maxlength="20">
+					pattern="\d{4,20}" title="숫자만 입력해주세요" maxlength="20" required>
+
 			</div>
 			<div class="mb-3">
 				<label for="my_banknumber" class="form-label">본인 계좌번호:</label> <select
 					class="form-select" aria-label="Floating label select example"
-					id="my_banknumber" name="senderBankNumber"
-					th:field="*{senderBankNumber}">
-					<option th:each="bankAccount : ${Log.user.bankAccounts}"
+					id="my_banknumber" name="sender_banknumber"
+					th:field="*{sender_banknumber}">
+					<option th:each="bankAccount : ${user.bankAccounts}"
 						th:value="${bankAccount.accountNumber}"
 						th:text="${bankAccount.accountNumber}"></option>
 				</select>

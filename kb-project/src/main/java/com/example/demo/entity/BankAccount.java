@@ -15,7 +15,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 // 순환참조로 인한 toString 무한루프 방지 위해 연관관계 필드는 제외
-@ToString(exclude = {"user", "bank", "sentLogs", "receivedLogs"})
+@ToString(exclude = { "user", "bank", "sentLogs", "receivedLogs" })
 public class BankAccount extends BaseEntity {
 
 	@Id

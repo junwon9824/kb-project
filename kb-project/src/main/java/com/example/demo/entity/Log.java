@@ -27,11 +27,11 @@ public class Log extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sender_account_id")
+    @JoinColumn(name = "sender_account_id", nullable = false)
     private BankAccount senderAccount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipient_account_id")
+    @JoinColumn(name = "recipient_account_id", nullable = false)
     private BankAccount recipientAccount;
 
     @Column(nullable = false)
@@ -46,10 +46,35 @@ public class Log extends BaseEntity {
     public String recipientName;
     public String senderName;
 
-    public void setAmount(Long amount) { this.amount = amount; }
-    public void setRecipientName(String recipientName) { this.recipientName = recipientName; }
-    public void setCategory(String category) { this.category = category; }
-    public void setSenderName(String senderName) { this.senderName = senderName; }
-    public void setSenderBankNumber(String senderBankNumber) { this.senderBankNumber = senderBankNumber; }
-    public void setRecipientBankNumber(String recipientBankNumber) { this.recipientBankNumber = recipientBankNumber; }
+    public void setAmount(Long amount) {
+        this.amount = amount;
+    }
+
+    public void setRecipientName(String recipientName) {
+        this.recipientName = recipientName;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
+    }
+
+    public void setSenderBankNumber(String senderBankNumber) {
+        this.senderBankNumber = senderBankNumber;
+    }
+
+    public void setRecipientBankNumber(String recipientBankNumber) {
+        this.recipientBankNumber = recipientBankNumber;
+    }
+
+    public void setSenderAccount(BankAccount senderAccount) {
+        this.senderAccount = senderAccount;
+    }
+
+    public void setRecipientAccount(BankAccount recipientAccount) {
+        this.recipientAccount = recipientAccount;
+    }
 }

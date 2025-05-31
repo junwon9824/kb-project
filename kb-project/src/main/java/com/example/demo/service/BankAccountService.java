@@ -130,7 +130,7 @@ public class BankAccountService {
 				updateBankAccount(recipientAcc.toDto());
 
 				log.info("before sender logggg");
-				log.info("dto.tostring()))))", dto.toString());
+				log.info("dto.tostring()))))" + dto.toString());
 
 				Log senderLog = dto.toEntity(); // 송금 로그
 				log.info("before recipientLog logggg" + recipientAcc.toString());

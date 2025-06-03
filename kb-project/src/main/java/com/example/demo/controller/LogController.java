@@ -83,7 +83,7 @@ public class LogController {
 
 		User user = (User) session.getAttribute("user");
 
-		System.out.println("getlogof my account" + myaccountnumber);
+//		System.out.println("getlogof my account" + myaccountnumber);
 
 		List<LogDto> logs = logService.getLogsWithoutCache(user.getUserid(), myaccountnumber);
 

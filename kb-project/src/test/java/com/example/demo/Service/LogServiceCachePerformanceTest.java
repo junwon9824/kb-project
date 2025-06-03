@@ -30,6 +30,7 @@ public class LogServiceCachePerformanceTest {
     @Autowired
     private CacheManager cacheManager;
 
+
     @Test
     void 캐시_성능_비교_테스트() {
         String userId = "junwon9824";

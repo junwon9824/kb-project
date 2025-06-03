@@ -13,6 +13,7 @@ public class CustomCacheErrorHandler implements CacheErrorHandler {
 
     @Override
     public void handleCacheGetError(RuntimeException exception, Cache cache, Object key) {
+        System.out.println("### CustomCacheErrorHandler 동작: " + exception.getMessage());
         log.warn("Cache get error on key {}: {}", key, exception.getMessage());
         // 예외를 무시하면 캐시 미스처럼 동작 (fallback to DB)
 

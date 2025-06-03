@@ -3,26 +3,37 @@ package com.example.demo.service;
 import com.example.demo.dto.*;
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.cache.annotation.*;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Comparator;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Slf4j
 @Service
 public class LogService {
 
+    @Autowired
+    private ObjectMapper objectMapper; // Bean으로 주입
     private final LogRepository logRepository;
     private final UserService userService;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
-    public LogService(LogRepository logRepository, UserService userService) {
+    public LogService(LogRepository logRepository, UserService userService,RedisTemplate<String, Object> redisTemplate ) {
         this.logRepository = logRepository;
         this.userService = userService;
+        this.redisTemplate= redisTemplate;
     }
 
     /**
@@ -68,13 +79,47 @@ public class LogService {
                 .build())
                 .collect(Collectors.toList());
     }
+//
+//    /**
+//     * 캐시된 로그 조회
+//     */
+//    @Cacheable(value = "logCache", key = "#userId + '-' + #bankNumber", unless = "#result == null")
+//    public List<LogDto> getLogs(String userId, String bankNumber) {
+//        log.info("Cache miss: Fetching logs for user={} bankNumber={}", userId, bankNumber);
+//        return getLogsWithoutCache(userId, bankNumber);
+//    }
 
-    /**
-     * 캐시된 로그 조회
-     */
-    @Cacheable(value = "logCache", key = "#userId + '-' + #bankNumber", unless = "#result == null")
+// ... LogService 내부
+
+    @CircuitBreaker(name = "redisCircuitBreaker", fallbackMethod = "getLogsFallback")
     public List<LogDto> getLogs(String userId, String bankNumber) {
-        log.info("Cache miss: Fetching logs for user={} bankNumber={}", userId, bankNumber);
+        try {
+            String cacheKey = userId + "-" + bankNumber;
+            Object cachedObj = redisTemplate.opsForValue().get(cacheKey);
+            if (cachedObj != null) {
+                // 1. 먼저 JSON 문자열로 변환
+                String json = objectMapper.writeValueAsString(cachedObj);
+                // 2. List<LogDto>로 역직렬화
+                List<LogDto> cached = objectMapper.readValue(json, new TypeReference<List<LogDto>>() {});
+                return cached;
+            }
+
+            // 캐시 미스
+            List<LogDto> dbResult = getLogsWithoutCache(userId, bankNumber);
+            redisTemplate.opsForValue().set(cacheKey, dbResult, 1, TimeUnit.HOURS);
+            return dbResult;
+        } catch (Exception e) {
+            log.error("Redis 장애! fallback 동작: user={}, bankNumber={}, 원인={}", userId, bankNumber, e.getMessage(), e);
+            throw new RuntimeException("Redis 오류", e);
+        }
+    }
+
+    public List<LogDto> getLogsFallback(String userId, String bankNumber, Throwable t) {
+
+        log.warn("Redis 장애! fallback 동작: user={}, bankNumber={}, 원인={}", userId, bankNumber, t.toString());
         return getLogsWithoutCache(userId, bankNumber);
     }
+
+
+
 }

@@ -44,12 +44,16 @@ public class LogService {
 //    public void save(Log log) {
 //        logRepository.save(log);
 //    }
-    @Caching(evict = {
-        @CacheEvict(value = "logCache", key = "#log.senderAccount.user.userid + '-' + #log.senderBankNumber"),
-        @CacheEvict(value = "logCache", key = "#log.recipientAccount.user.userid + '-' + #log.recipientBankNumber")
-    })
+
     public void save(Log log) {
         logRepository.save(log);
+
+        // 직접 캐시 삭제
+        String senderKey = log.getSenderAccount().getUser().getUserid() + "-" + log.getSenderBankNumber();
+        String recipientKey = log.getRecipientAccount().getUser().getUserid() + "-" + log.getRecipientBankNumber();
+
+        redisTemplate.delete(senderKey);
+        redisTemplate.delete(recipientKey);
     }
 
     /**

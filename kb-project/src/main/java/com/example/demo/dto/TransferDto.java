@@ -27,6 +27,8 @@ public class TransferDto {
     private String sender_name;
     private String account_password;
 
+    private String senderUserId;
+    private String recipientUserId;
     private Long amount;
 
     public Log toEntity() {
@@ -39,6 +41,8 @@ public class TransferDto {
         log.setSenderName(sender_name);
         log.setRecipientBankNumber(recipient_banknumber);
         log.setSenderBankNumber(sender_banknumber);
+        log.setSenderUserId(senderUserId);
+        log.setRecipientUserId(recipientUserId);
         return log;
     }
 

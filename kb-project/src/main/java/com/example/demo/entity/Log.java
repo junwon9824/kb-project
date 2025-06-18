@@ -37,6 +37,10 @@ public class Log extends BaseEntity {
     @Column(nullable = false)
     public Long amount;
 
+    private String senderUserId;
+    private String recipientUserId;
+
+
     public String senderBankNumber;
     public String recipientBankNumber;
 

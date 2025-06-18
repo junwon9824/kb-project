@@ -30,6 +30,9 @@ import lombok.extern.slf4j.Slf4j;
 public class BankAccountService {
 
     private static final Logger logger = LoggerFactory.getLogger(BankAccountService.class);
+    // 예시: 클래스 상단에 한도 상수 선언
+    private static final long MIN_DEPOSIT_AMOUNT = 1000L;      // 최소 1,000원
+    private static final long MAX_DEPOSIT_AMOUNT = 10000000L;  // 최대 1,000만 원
 
     private final BankAccountRepository bankAccountRepository;
     private final UserRepository userRepository;
@@ -47,6 +50,63 @@ public class BankAccountService {
         this.logRepository = logRepository;
         this.logService = logService;
     }
+
+    @Transactional
+    public void depositToAccount(String accountNumber, Long amount, String depositorName) {
+        //현금 입금도 가능..
+        try {
+            logger.info("입금 요청: 계좌={}, 금액={}, 입금자={}", accountNumber, amount, depositorName);
+
+            // 1. 계좌를 비관적 락으로 조회
+            BankAccount account = Optional
+                    .ofNullable(bankAccountRepository.findByAccountNumberWithLock(accountNumber))
+                    .orElseThrow(() -> new IllegalArgumentException("입금 계좌 없음"));
+
+
+            // 2. 입금 금액 검증 (최소/최대 한도 포함)
+            if (amount == null || amount < MIN_DEPOSIT_AMOUNT || amount > MAX_DEPOSIT_AMOUNT) {
+                logger.warn("잘못된 입금 금액: {}", amount);
+                throw new IllegalArgumentException("입금 금액은 " + MIN_DEPOSIT_AMOUNT + "원 이상, " + MAX_DEPOSIT_AMOUNT + "원 이하이어야 합니다.");
+            }
+
+
+            Long originalAmount = account.getAmount();
+            try {
+                // 3. 잔액 업데이트
+                account.setAmount(originalAmount + amount);
+                updateBankAccount(account.toDto());
+
+                // 4. 입금 내역 기록 (Log 엔티티 활용)
+                Log depositLog = Log.builder()
+                        .amount(amount)
+                        .category("입금")
+                        .recipientBankNumber(account.getAccountNumber())
+                        .recipientName(account.getUser() != null ? account.getUser().getUsername() : "알수없음")
+                        .senderName(depositorName)
+                        .recipientAccount(account)
+                        .build();
+
+                logService.depositSave(depositLog);
+
+                logger.info("입금 성공: 계좌={}, 금액={}", accountNumber, amount);
+
+            } catch (Exception e) {
+                account.setAmount(originalAmount); // 복구
+                logger.error("입금 도중 예외 발생: {}, 복구 수행", e.getMessage(), e);
+                throw e;
+            }
+        } catch (PessimisticLockingFailureException e) {
+            logger.error("락 획득 실패: {}", e.getMessage(), e);
+            throw e;
+        } catch (DataAccessException e) {
+            logger.error("DB 접근 실패: {}", e.getMessage(), e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("입금 처리 중 알 수 없는 예외: {}", e.getMessage(), e);
+            throw e;
+        }
+    }
+
 
     public BankAccount updateBankAccount(BankAccountDto dto) {
         return bankAccountRepository.findById(dto.getId()).map(account -> {
@@ -144,6 +204,8 @@ public class BankAccountService {
                         .sender_name(dto.getSender_name())
                         .recipient_name(dto.getRecipient_name())
                         .recipientAccount(recipientAcc)
+                        .senderUserId(sender.getUserid())
+                        .recipientUserId(recipientUser.getUserid())
                         .senderAccount(senderAcc)
                         .build()
                         .toEntity(); // 입금 로그
@@ -153,8 +215,8 @@ public class BankAccountService {
                 log.info("senderLogsenderLog" + senderLog.toString());
                 log.info("recipientLogrecipientLog" + recipientLog.toString());
 
-                logService.save(senderLog);
-                logService.save(recipientLog);
+                logService.transfersave(senderLog);
+                logService.transfersave(recipientLog);
 
             } catch (Exception e) {
                 senderAcc.setAmount(originalSenderAmount); // 복구

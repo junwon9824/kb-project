@@ -68,7 +68,7 @@ class LogServiceCacheEvictTest {
 
         System.out.println("[디버그] senderUser: " + senderUser);
         System.out.println("[디버그] senderAccount: " + senderAccount);
-        System.out.println("[디버그] recipientUser: " + recipientUser);
+        System.out.println("[디버그] recipientUser: " + recipientUser.toString());
         System.out.println("[디버그] recipientAccount: " + recipientAccount);
 
         TransferDto transferDto = TransferDto.builder()
@@ -102,5 +102,6 @@ class LogServiceCacheEvictTest {
         Object afterEvict = redisTemplate.opsForValue().get(userId + "-" + bankNumber);
         System.out.println("[디버그] 캐시 삭제 후 상태: " + afterEvict);
         assertThat(afterEvict).isNull();
+
     }
 }

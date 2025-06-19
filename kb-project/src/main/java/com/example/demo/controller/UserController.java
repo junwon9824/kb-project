@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,6 +48,8 @@ public class UserController {
 
 	@Autowired
 	private BankAccountRepository bankAccountRepository;
+    @Autowired
+    private UserRepository userRepository;
 	//
 	// @GetMapping("/users")
 	// public String getUsers(Model model, HttpServletRequest request) {
@@ -317,15 +320,21 @@ public class UserController {
 		String userid = user.getUserid();
 		System.out.println("beforeeeee log.tostringgggggg" + log.toString());
 
+
+		BankAccount recipientAccount=bankAccountRepository.findByAccountNumber(log.getRecipient_banknumber());
+		BankAccount senderAccount =bankAccountRepository.findByAccountNumber(log.getSender_banknumber());
+		String recipientuserid =  recipientAccount.getUser().getUserid();
+		String senderuserid =  senderAccount.getUser().getUserid();
+
 		log.setCategory("송금");
 		log.setSender_name(user.getUsername());
-		log.setSender_banknumber(log.getSender_banknumber()); // Add this line
-		log.setRecipientAccount(log.getRecipientAccount()); // Add this line
-		log.setAmount(log.getAmount()); // Add this line
-		log.setRecipient_banknumber(log.getRecipient_banknumber()); // Add this line
-		log.setRecipient_name(log.getRecipient_name());
 		log.setRecipientAccount(bankAccountRepository.findByAccountNumber(log.getRecipient_banknumber()));
 		log.setSenderAccount(bankAccountRepository.findByAccountNumber(log.getSender_banknumber()));
+		log.setRecipientUserId( recipientuserid);
+		log.setSenderUserId(senderuserid);
+
+
+
 
 		System.out.println("log.tostringgggggg" + log.toString());
 		System.out.println("flag");

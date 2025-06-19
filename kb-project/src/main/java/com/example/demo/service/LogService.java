@@ -82,7 +82,7 @@ public class LogService {
         log.info("useridddd"+userId);
         List<Log> logs = logRepository.findBySenderOrRecipientAccountNumberWithUser(bankNumber);
 
-        log.info("afterfindBySenderOrRecipientAccountNumberWithUser");
+        log.info("afterfindBySenderOrRecipientAccountNumberWithUser"+userId );
 
         return logs.stream()
                 .filter(log ->( log.getSenderUserId() != null && log.getSenderUserId().equals(userId) && log.getCategory().equals("송금"))
@@ -123,16 +123,24 @@ public class LogService {
             String cacheKey = userId + "-" + bankNumber;
             Object cachedObj = redisTemplate.opsForValue().get(cacheKey);
 
-            if (cachedObj != null) {
+            log.info("cachedObj"+cachedObj);
+
+            if (cachedObj != null && !((List<?>)cachedObj).isEmpty()) {
+                log.info("cachedObj in if"+cachedObj);
+
                 // 1. 먼저 JSON 문자열로 변환
                 String json = objectMapper.writeValueAsString(cachedObj);
                 // 2. List<LogDto>로 역직렬화
                 List<LogDto> cached = objectMapper.readValue(json, new TypeReference<List<LogDto>>() {});
                 return cached;
+
             }
+
             log.info("userId in getLogs "+userId);
             // 캐시 미스
             List<LogDto> dbResult = getLogsWithoutCache(userId, bankNumber);
+            log.info("dbResult"+dbResult);
+
             redisTemplate.opsForValue().set(cacheKey, dbResult, 1, TimeUnit.HOURS);
             return dbResult;
         } catch (Exception e) {

@@ -1,0 +1,92 @@
+.voice-recognition-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 70px 40px;
+}
+
+.result-container {
+  margin-bottom: 20px;
+}
+
+.chat-container {
+  height: 80vh;
+  width: 80%;
+  max-width: 867px;
+  margin: 25px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f3f2f2;
+  padding: 10px;
+  margin-bottom: 20px;
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+.message {
+  margin-bottom: 10px;
+  border-radius: 15px;
+}
+
+.userMessageContainer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.userMessage {
+  background-color: #DCF8C6;
+  color: #333;
+  padding: 5px 10px;
+  border-radius: 10px;
+  margin-left: 10px;
+}
+
+.serverMessageContainer {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.serverMessage {
+  background-color: #cbdff8;
+  color: #333;
+  padding: 5px 10px;
+  border-radius: 10px;
+  margin-right: 10px;
+  text-align: left;
+}
+
+.buttons-container {
+  margin-top: 20px;
+}
+
+.btn {
+  margin: 15px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-primary.listening {
+  background-color: #dc3545;
+}
+
+.btn-primary.listening:hover {
+  background-color: #c82333;
+}
+
+.btn-lg {
+  padding: 12px 24px;
+  font-size: 18px;
+} 

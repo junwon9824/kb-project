@@ -1,0 +1,150 @@
+.header {
+  transition: all 0.5s;
+  z-index: 997;
+  height: 90px;
+  background: rgb(0, 172, 238);
+  background: linear-gradient(0deg, rgba(0, 172, 238, 1) 0%, rgba(2, 126, 251, 1) 100%);
+}
+
+.header.sticked {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 70px;
+  box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.1);
+}
+
+.header .logo {
+  text-decoration: none;
+}
+
+.header .logo h1 {
+  font-size: 30px;
+  margin: 0;
+  font-weight: 600;
+  color: #ffffff;
+  font-family: var(--font-primary);
+}
+
+.navbar {
+  padding: 0;
+  margin: 0;
+}
+
+.navbar ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  list-style: none;
+  align-items: center;
+}
+
+.navbar > ul > li {
+  position: relative;
+  white-space: nowrap;
+  padding: 10px 0 10px 28px;
+}
+
+.navbar a,
+.navbar a:focus {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-primary);
+  font-size: 16px;
+  font-weight: 400;
+  color: #ffffff;
+  white-space: nowrap;
+  transition: 0.3s;
+  position: relative;
+  text-decoration: none;
+}
+
+.navbar a:hover,
+.navbar .active,
+.navbar .active:focus,
+.navbar li:hover > a {
+  color: #ffffff;
+  opacity: 0.8;
+}
+
+.logout-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-size: 16px;
+  font-weight: 400;
+  transition: 0.3s;
+}
+
+.logout-btn:hover {
+  color: #ffffff;
+  opacity: 0.8;
+}
+
+.mobile-nav-toggle {
+  color: #ffffff;
+  font-size: 28px;
+  cursor: pointer;
+  display: none;
+  line-height: 0;
+  transition: 0.5s;
+}
+
+@media (max-width: 991px) {
+  .mobile-nav-toggle {
+    display: block;
+  }
+
+  .navbar ul {
+    display: none;
+  }
+
+  .navbar-mobile {
+    position: fixed;
+    overflow: hidden;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    transition: 0.3s;
+  }
+
+  .navbar-mobile ul {
+    display: block;
+    position: absolute;
+    top: 55px;
+    right: 15px;
+    bottom: 15px;
+    left: 15px;
+    padding: 10px 0;
+    border-radius: 10px;
+    background-color: #fff;
+    overflow-y: auto;
+    transition: 0.3s;
+  }
+
+  .navbar-mobile a,
+  .navbar-mobile a:focus {
+    padding: 10px 20px;
+    font-size: 15px;
+    color: #000000;
+  }
+
+  .navbar-mobile a:hover,
+  .navbar-mobile .active,
+  .navbar-mobile .active:focus {
+    color: #000000;
+  }
+
+  .navbar-mobile .logout-btn {
+    color: #000000;
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+
+  .navbar-mobile .logout-btn:hover {
+    color: #000000;
+  }
+} 

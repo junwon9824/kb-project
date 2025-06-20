@@ -1,0 +1,28 @@
+.container {
+  margin-top: 80px;
+  background-color: #FFFFFF;
+  margin: 0 auto;
+  width: 800px;
+  height: 600px;
+  border-radius: 15px;
+  box-shadow: 0 0.9rem 1.7rem rgba(0, 0, 0, 0.25), 0 0.7rem 0.7rem rgba(0, 0, 0, 0.22);
+}
+
+.table-container {
+  overflow: auto;
+  width: 600px;
+  height: 450px;
+  margin: auto;
+}
+
+.log-table {
+  border: 1px solid black;
+  width: 550px;
+  height: 400px;
+  margin: 0 auto;
+}
+
+.log-table td {
+  padding-left: 10px;
+  padding-right: 10px;
+} 

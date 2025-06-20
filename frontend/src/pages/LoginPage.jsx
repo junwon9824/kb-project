@@ -1,0 +1,236 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import './LoginPage.css';
+
+const LoginPage = () => {
+  const navigate = useNavigate();
+  const [isRightPanelActive, setIsRightPanelActive] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  
+  // 로그인 상태
+  const [loginData, setLoginData] = useState({
+    userid: '',
+    password: ''
+  });
+  
+  // 회원가입 상태
+  const [signupData, setSignupData] = useState({
+    username: '',
+    userid: '',
+    password: '',
+    phone: '',
+    address: '',
+    account_password: '',
+    disabled: false
+  });
+
+  // 로그인 처리
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('/users/index', loginData);
+      if (response.status === 200) {
+        // 로그인 성공 시 메인 페이지로 이동
+        navigate('/users/main');
+      }
+    } catch (error) {
+      setErrorMessage('로그인에 실패했습니다.');
+    }
+  };
+
+  // 회원가입 처리
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('/users/new', signupData);
+      if (response.status === 200) {
+        // 회원가입 성공 시 로그인 패널로 전환
+        setIsRightPanelActive(false);
+        setErrorMessage('');
+      }
+    } catch (error) {
+      setErrorMessage('회원가입에 실패했습니다.');
+    }
+  };
+
+  // 입력 필드 변경 처리
+  const handleLoginChange = (e) => {
+    setLoginData({
+      ...loginData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSignupChange = (e) => {
+    setSignupData({
+      ...signupData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  // 장애인 여부 변경 처리
+  const handleDisabledChange = (value) => {
+    setSignupData({
+      ...signupData,
+      disabled: value
+    });
+  };
+
+  return (
+    <div className={`container ${isRightPanelActive ? 'right-panel-active' : ''}`}>
+      {errorMessage && (
+        <div style={{ color: 'red', textAlign: 'center', marginBottom: '20px' }}>
+          {errorMessage}
+        </div>
+      )}
+      
+      {/* 로그인 폼 */}
+      <div className="container__form container--signin">
+        <form className="form" onSubmit={handleLogin}>
+          <h2 className="form__title">로그인</h2>
+          <input
+            style={{ outline: '2px solid #e9e9e9', borderRadius: '5px' }}
+            type="text"
+            placeholder="아이디"
+            className="input"
+            name="userid"
+            value={loginData.userid}
+            onChange={handleLoginChange}
+          />
+          <input
+            style={{ outline: '2px solid #e9e9e9', borderRadius: '5px' }}
+            type="password"
+            placeholder="비밀번호"
+            className="input"
+            name="password"
+            value={loginData.password}
+            onChange={handleLoginChange}
+          />
+          <button type="submit" className="custom-btn btn-3">
+            <span>로그인</span>
+          </button>
+        </form>
+      </div>
+
+      {/* 회원가입 폼 */}
+      <div className="container__form container--signup">
+        <form className="form" onSubmit={handleSignup}>
+          <h2 className="form__title">회원가입</h2>
+          <input
+            style={{ outline: '2px solid #e9e9e9', borderRadius: '5px' }}
+            type="text"
+            placeholder="이름"
+            className="input"
+            name="username"
+            value={signupData.username}
+            onChange={handleSignupChange}
+            required
+          />
+          <input
+            type="text"
+            style={{ outline: '2px solid #e9e9e9', borderRadius: '5px' }}
+            placeholder="아이디"
+            className="input"
+            name="userid"
+            value={signupData.userid}
+            onChange={handleSignupChange}
+            required
+          />
+          <input
+            type="password"
+            placeholder="비밀번호"
+            className="input"
+            style={{ outline: '2px solid #e9e9e9', borderRadius: '5px' }}
+            name="password"
+            value={signupData.password}
+            onChange={handleSignupChange}
+            required
+          />
+          <input
+            type="text"
+            style={{ outline: '2px solid #e9e9e9', borderRadius: '5px' }}
+            placeholder="전화번호"
+            className="input"
+            name="phone"
+            value={signupData.phone}
+            onChange={handleSignupChange}
+            required
+          />
+          <input
+            type="text"
+            placeholder="주소"
+            className="input"
+            style={{ outline: '2px solid #e9e9e9', borderRadius: '5px' }}
+            name="address"
+            value={signupData.address}
+            onChange={handleSignupChange}
+            required
+          />
+          <input
+            type="text"
+            placeholder="계좌비밀번호"
+            className="input"
+            style={{ outline: '2px solid #e9e9e9', borderRadius: '5px' }}
+            name="account_password"
+            value={signupData.account_password}
+            onChange={handleSignupChange}
+            required
+          />
+
+          <div style={{ marginTop: '10px' }}>
+            <input
+              type="radio"
+              id="disabled"
+              name="disabled"
+              checked={signupData.disabled === true}
+              onChange={() => handleDisabledChange(true)}
+              required
+            />
+            <label className="custom-control-label" htmlFor="disabled">
+              장애
+            </label>
+            <input
+              type="radio"
+              id="disabled2"
+              name="disabled"
+              checked={signupData.disabled === false}
+              onChange={() => handleDisabledChange(false)}
+              required
+            />
+            <label className="custom-control-label" htmlFor="disabled2">
+              비장애
+            </label>
+          </div>
+          <button className="custom-btn btn-3" type="submit">
+            <span>회원가입</span>
+          </button>
+        </form>
+      </div>
+
+      {/* 오버레이 */}
+      <div className="container__overlay">
+        <div className="overlay">
+          <div className="overlay__panel overlay--left">
+            <button
+              className="custom-btn btn-3"
+              onClick={() => setIsRightPanelActive(false)}
+            >
+              <span>로그인</span>
+            </button>
+          </div>
+          <div className="overlay__panel overlay--right">
+            <button
+              className="custom-btn btn-3"
+              onClick={() => setIsRightPanelActive(true)}
+            >
+              <span>회원가입</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default LoginPage; 

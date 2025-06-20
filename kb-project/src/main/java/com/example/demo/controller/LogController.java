@@ -3,9 +3,9 @@ package com.example.demo.controller;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.LogDto;
 import com.example.demo.entity.User;
@@ -17,7 +17,7 @@ import com.example.demo.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
-@Controller
+@RestController
 public class LogController {
 
     private final BankAccountService bankAccountService;
@@ -33,66 +33,18 @@ public class LogController {
         this.logService = logService;
     }
 
-    @GetMapping("/log/{myaccountnumber}") //
-    public String getlogs(@PathVariable("myaccountnumber") String myaccountnumber, Model model,
-                          HttpServletRequest request) {
-
+    @GetMapping("/log/{myaccountnumber}")
+    public List<LogDto> getlogs(@PathVariable("myaccountnumber") String myaccountnumber, HttpServletRequest request) {
         HttpSession session = request.getSession();
-
         User user = (User) session.getAttribute("user");
-
-        System.out.println("getlogof my account" + myaccountnumber);
-
-        List<LogDto> logs = logService.getLogs(user.getUserid(), myaccountnumber);
-
-        System.out.println("myaccountnumber" + myaccountnumber);
-        System.out.println("logs" + logs.toString() );
-
-        model.addAttribute("Log", logs);
-
-        if (user.isDisabled()) {// 장애인
-
-            return "log/logs2";
-
-        } else {// 비장애인
-            return "log/logs";
-        }
-
+        return logService.getLogs(user.getUserid(), myaccountnumber);
     }
 
-    @GetMapping("/withoutcache/log/{myaccountnumber}") //
-    public String getlogswithoutcahce(@PathVariable("myaccountnumber") String myaccountnumber, Model model,
-                                      HttpServletRequest request) {
-
+    @GetMapping("/withoutcache/log/{myaccountnumber}")
+    public List<LogDto> getlogswithoutcahce(@PathVariable("myaccountnumber") String myaccountnumber, HttpServletRequest request) {
         HttpSession session = request.getSession();
-
-        /// // jmeter 하드코딩
-        // User userByUserId = userService.getUserByUserId("junho1131" );
-        //
-        // System.out.println("userByUserIduserByUserId"+userByUserId.getUserid());
-        //
-        // session.setAttribute("user", userByUserId);
-        /// // jmeter 하드코딩
-
         User user = (User) session.getAttribute("user");
-
-//		System.out.println("getlogof my account" + myaccountnumber);
-
-//        List<LogDto> logs = logService.getLogsWithoutCache(user.getUserid(), myaccountnumber);
-        List<LogDto> logs = logService.getLogs(user.getUserid(), myaccountnumber);
-
-        System.out.println("myaccountnumber" + myaccountnumber);
-        System.out.println("logs" + logs.toString());
-        model.addAttribute("Log", logs);
-
-        if (user.isDisabled()) {// 장애인
-
-            return "log/logs2";
-
-        } else {// 비장애인
-            return "log/logs";
-        }
-
+        return logService.getLogs(user.getUserid(), myaccountnumber);
     }
 
     // 다른 HTTP 요청에 대한 메서드 작성 (계좌 생성, 수정, 삭제 등)

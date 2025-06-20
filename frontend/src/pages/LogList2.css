@@ -1,0 +1,13 @@
+.log-container {
+  padding: 20px;
+}
+
+.log-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.log-table td {
+  padding-left: 10px;
+  padding-right: 10px;
+} 

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../apis/axios';
 import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
+import {userApi} from "../apis";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -29,7 +30,8 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/users/index', loginData);
+      // const response = await axios.post('/users/login', loginData);
+      const response = await userApi.login(loginData)
       if (response.status === 200) {
         // 로그인 성공 시 메인 페이지로 이동
         navigate('/users/main');
@@ -43,7 +45,7 @@ const LoginPage = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/users/new', signupData);
+      const response = await axios.post('/users', signupData);
       if (response.status === 200) {
         // 회원가입 성공 시 로그인 패널로 전환
         setIsRightPanelActive(false);

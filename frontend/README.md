@@ -60,7 +60,7 @@ src/
 │   ├── LogList.jsx     # 계좌내역
 │   ├── LogList2.jsx    # 장애인용 계좌내역
 │   └── *.css           # 페이지별 스타일
-├── App.js              # 메인 앱 컴포넌트
+├── App.jsx              # 메인 앱 컴포넌트
 ├── App.css             # 전역 스타일
 ├── index.js            # 앱 진입점
 └── index.css           # 기본 스타일

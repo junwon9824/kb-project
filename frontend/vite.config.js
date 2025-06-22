@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
-      '/api': 'http://localhost:8080' // CRA의 "proxy" 설정 대체
+      '/api': 'http://localhost:8000' // CRA의 "proxy" 설정 대체
     }
   }
 });

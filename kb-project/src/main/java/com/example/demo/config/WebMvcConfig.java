@@ -26,11 +26,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/users/new",
                         "/login",       // 프론트엔드 로그인 페이지
                         "/signup",      // 프론트엔드 회원가입 페이지
-                        "/api/users/login",
-                        "/api/users/new",
-                        "/api/css/**",
-                        "/api/js/**",
-                        "/api/assets/**",
+                        "/users/login",
+                        "/users/new",
+                        "/css/**",
+                        "/js/**",
+                        "/assets/**",
                         "/css/**",
                         "/js/**",
                         "/assets/**"

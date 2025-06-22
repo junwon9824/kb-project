@@ -101,4 +101,13 @@ public class UserService {
 						"User not found with the given username and bank account number"));
 	}
 
+	public boolean authenticate(String userid, String password) {
+		User user = userRepository.findByuserid(userid);
+		if (user != null && user.getPassword().equals(password)) {
+			return true;
+		}
+		return false;
+	}
+
+
 }

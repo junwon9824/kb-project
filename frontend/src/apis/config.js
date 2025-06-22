@@ -13,7 +13,7 @@ export const API_CONFIG = {
 export const API_ENDPOINTS = {
   // 사용자 관련
   USER: {
-    LOGIN: '/user/login',
+    LOGIN: '/auth/login',
     SIGNUP: '/user/signup',
     LOGOUT: '/user/logout',
     PROFILE: '/user/profile',

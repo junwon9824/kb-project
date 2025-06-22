@@ -70,16 +70,16 @@ public class UserController {
 		userService.deleteUser(id);
 	}
 
-	@PostMapping("/users/login")
-	public ResponseEntity<?> login(@RequestBody Login login, HttpSession session) {
-		User user = userService.getUserByUserId(login.getUserid());
-		if (user != null && user.getPassword().equals(login.getPassword())) {
-			session.setAttribute("user", user);
-			return ResponseEntity.ok(user);
-		} else {
-			return ResponseEntity.status(401).body("Invalid credentials");
-		}
-	}
+//	@PostMapping("/users/login")
+//	public ResponseEntity<?> login(@RequestBody Login login, HttpSession session) {
+//		User user = userService.getUserByUserId(login.getUserid());
+//		if (user != null && user.getPassword().equals(login.getPassword())) {
+//			session.setAttribute("user", user);
+//			return ResponseEntity.ok(user);
+//		} else {
+//			return ResponseEntity.status(401).body("Invalid credentials");
+//		}
+//	}
 
 	@PostMapping("/users/logout")
 	public ResponseEntity<?> logout(HttpSession session) {

@@ -1,59 +1,31 @@
 package com.example.demo.entity;
 
-import java.util.ArrayList;
+import jakarta.persistence.*;
+import lombok.*;
 import java.util.*;
 
-
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
 @Entity
-@Getter
-@Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
- public class User extends BaseEntity {
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	
 	private String username;
 
 	@Column(unique = true)
 	private String userid;
-	@Column(nullable = false) 
+
+	@Column(nullable = false)
 	private String password;
 
-	private String account_password;
-
-	private String phone;
-	private String address;
-	private String clientSafeIp; //사용자의 IP를 저장
-	
 	private boolean disabled;
 
-	public boolean isDisabled() {
-		return disabled;
-	}
-
-	public void setDisabled(boolean disabled) {
-		this.disabled = disabled;
-	}
-
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-	private List<BankAccount> bankAccounts = new ArrayList<>();
-
-	public void setUserid(String userid) {
-        this.userid = userid;
-    }
-	
-	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "user_roles",
+			joinColumns = @JoinColumn(name = "user_id"),
+			inverseJoinColumns = @JoinColumn(name = "role_id")
+	)
+	private Set<Role> roles = new HashSet<>();
 }

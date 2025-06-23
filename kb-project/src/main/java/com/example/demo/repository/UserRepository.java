@@ -5,11 +5,13 @@ import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.User;
 
+import java.util.Optional;
+
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
 
 	User findByUsername(String username);
 
-	User findByuserid(String userid);
+	Optional<User> findByuserid(String userid);
 }

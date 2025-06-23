@@ -3,6 +3,7 @@ package com.example.demo.security;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.security.core.Authentication;
@@ -14,6 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class JwtTokenProvider {
 
     @Value("${jwt.secret}")
@@ -43,14 +45,31 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+
     public boolean validateToken(String token) {
         try {
             Jws<Claims> claimsJws = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return !claimsJws.getBody().getExpiration().before(new Date());
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
+            boolean expired = claimsJws.getBody().getExpiration().before(new Date());
+            if (expired) {
+                log.warn("JWT 만료: exp={}, now={}", claimsJws.getBody().getExpiration(), new Date());
+            }
+            return !expired;
+        } catch (ExpiredJwtException e) {
+            log.warn("JWT 만료 예외: {}", e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            log.warn("지원하지 않는 JWT: {}", e.getMessage());
+        } catch (MalformedJwtException e) {
+            log.warn("잘못된 JWT: {}", e.getMessage());
+        } catch (SignatureException e) {
+            log.warn("JWT 서명 오류: {}", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            log.warn("JWT 인자 오류: {}", e.getMessage());
+        } catch (Exception e) {
+            log.warn("JWT 기타 오류: {}", e.getMessage());
         }
+        return false;
     }
+
 
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();

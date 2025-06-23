@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.Path;
 
-@Controller
+@RestController
 public class LogController {
 
 	private final BankAccountService bankAccountService;

@@ -16,7 +16,7 @@ import com.example.demo.dto.NewsDto;
 import com.example.demo.entity.User;
 import com.example.demo.service.NewsService;
 
-@Controller
+@RestController
 public class NewsController {
 
     @Autowired

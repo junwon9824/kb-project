@@ -28,7 +28,7 @@ import com.example.demo.service.BankAccountService;
 import com.example.demo.service.BookMarkService;
 import com.example.demo.service.UserService;
 
-@Controller
+@RestController
 @RequestMapping("/bookmarks")
 public class BookMarkController {
 

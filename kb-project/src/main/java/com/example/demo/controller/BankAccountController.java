@@ -4,141 +4,67 @@ import com.example.demo.dto.BankAccountDto;
 import com.example.demo.entity.Bank;
 import com.example.demo.entity.BankAccount;
 import com.example.demo.entity.User;
-import com.example.demo.repository.BankAccountRepository;
 import com.example.demo.service.BankAccountService;
 import com.example.demo.service.BankService;
 import com.example.demo.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-@Controller
+@RestController
+@RequestMapping("/bankaccounts")
 public class BankAccountController {
 
-	private final BankAccountService bankAccountService;
-	private final BankService bankService;
-	private final UserService userService;
+    private final BankAccountService bankAccountService;
+    private final BankService bankService;
+    private final UserService userService;
 
-	public BankAccountController(BankAccountService bankAccountService, BankService bankService,
-			UserService userService) {
-		this.bankAccountService = bankAccountService;
-		this.bankService = bankService;
-		this.userService = userService;
-	}
+    @Autowired
+    public BankAccountController(BankAccountService bankAccountService, BankService bankService,
+                                 UserService userService) {
+        this.bankAccountService = bankAccountService;
+        this.bankService = bankService;
+        this.userService = userService;
+    }
 
-	@GetMapping("/bankaccounts") // User Bank Account List
-	public String getBankAccounts(Model model, HttpServletRequest request) {
-		HttpSession session = request.getSession();
-		User user = (User) session.getAttribute("user");
-		List<BankAccount> bankAccounts = bankAccountService.getBankAccountByUser(user);
+    // 1. 특정 유저의 계좌 목록 조회 (userid로 조회)
+    @GetMapping("/user/{userid}")
+    public List<BankAccount> getBankAccountsByUser(@PathVariable String userid) {
+        User user = userService.getUserByUserid(userid);
+        return bankAccountService.getBankAccountByUser(user);
+    }
 
-		model.addAttribute("bankAccounts", bankAccounts);
+    // 2. 계좌 생성 (POST)
+    @PostMapping
+    public BankAccount createBankAccount(@RequestBody BankAccount bankAccount, @RequestParam String userid) {
+        User user = userService.getUserByUserid(userid);
+        String bankname = bankAccount.getBank().getBankname();
+        Bank bank = bankService.getBankBybankname(bankname);
+        return bankAccountService.createBankAccount(bankAccount, bank, user);
+    }
 
-		if (user.isDisabled()) {//장애인
+    // 3. 계좌 단건 조회
+    @GetMapping("/{id}")
+    public BankAccount getBankAccount(@PathVariable Long id) {
+        return bankAccountService.getBankAccountById(id);
+    }
 
-			return "bankaccount/list2";
+    // 4. 계좌 삭제 (DELETE)
+    @DeleteMapping("/{id}")
+    public void deleteBankAccount(@PathVariable Long id) {
+        BankAccount bankAccount = bankAccountService.getBankAccountById(id);
+        bankAccountService.deleteBankAccount(bankAccount);
+    }
 
-		} else {//비장애인
-			return "bankaccount/list";
+    // 5. 주계좌 설정 (PUT)
+    @PutMapping("/mainAccount/{id}")
+    public void setMainAccount(@PathVariable Long id) {
+        BankAccountDto bankAccountDto = bankAccountService.getBankAccountByAccountId(id).toDto();
+        bankAccountService.setmainAccount(bankAccountDto);
+    }
 
-		}
-
-	}
-
-	// User Bank Account Create
-	// User Clients send Data for Bank Accounts
-	@PostMapping("/bankaccounts")
-	public String createBankAccount(@ModelAttribute("bankAccount") BankAccount bankAccount,
-									HttpServletRequest request) {
-		HttpSession session = request.getSession();
-		User user = (User) session.getAttribute("user");
-		String userid = user.getUserid();
-
-		String bankname = bankAccount.getBank().getBankname();
-		Bank bank = bankService.getBankBybankname(bankname);
-
-		System.out.println("user"+ userid +" make account getAccountNumber"+bankAccount.getAccountNumber() );
-		bankAccountService.createBankAccount(bankAccount, bank, user);
-
-
-		return "redirect:/bankaccounts";
-
-	}
-//	accountNumber=${accountNumber}
-//	amount=
-//	bank_id=1
-//	mainAccount=true
-
-	// User Bank Account Create FormPage
-	@GetMapping("/bankaccounts/create")
-	public String createBankAccountform(Model model) {
-		model.addAttribute("bankAccount", new BankAccount());
-		
-		return "bankaccount/create";
-
-	}
-	
-	@GetMapping("/bankaccounts/create2")
-	public String createBankAccountform2(Model model) {
-		model.addAttribute("bankAccount", new BankAccount());
-		
-		return "bankaccount/create2";
-		
-	}
-
-//계좌 생성
-	@PostMapping("/bankaccounts/create")
-	public String createBankAccount(HttpServletRequest request,
-			@ModelAttribute("bankaccount") BankAccount bankAccount) {
-		HttpSession session = request.getSession();
-		User user = (User) session.getAttribute("user");
-
-		String userid = user.getUserid();
-		String bankname = bankAccount.getBank().getBankname();
-		Bank bank = bankService.getBankBybankname(bankname);
-
-		bankAccountService.createBankAccount(bankAccount, bank, user);
-		return "redirect:/bankaccounts";
-
-	}
-
-	@GetMapping("/bankaccounts/delete/{id}") // 삭제
-	public String deleteBankAccount(@PathVariable Long id, HttpServletRequest request) {
-		HttpSession session = request.getSession();
-		User user = (User) session.getAttribute("user");
-
-		BankAccount bankAccount = bankAccountService.getBankAccountById(id);
-		Long bankid = bankAccount.getBank().getId();
-		Bank bankById = bankService.getBankById(bankid);
-		System.out.println(bankAccount.getId());
-		bankAccountService.deleteBankAccount(bankAccount);
-		System.out.println("delete");
-
-		return "redirect:/bankaccounts";
-
-	}
-
-	@GetMapping("/bankaccounts/mainAccount/{id}") // 주계좌설정
-	public String setMainAccount(@PathVariable("id") Long id) {
-
-		BankAccountDto bankAccountDto = bankAccountService.getBankAccountByAccountId(id).toDto();
-		System.out.println("controller bankaccount" + bankAccountDto.toString());
-		bankAccountService.setmainAccount(bankAccountDto);
-		System.out.println("success modify");
-
-		return "redirect:/bankaccounts";
-
-	}
-
-	// 다른 HTTP 요청에 대한 메서드 작성 (계좌 생성, 수정, 삭제 등)
+    // 필요하다면 추가적인 RESTful 엔드포인트도 정의 가능
 }
+

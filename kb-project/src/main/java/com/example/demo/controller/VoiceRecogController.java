@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-@Controller
+@RestController
 public class VoiceRecogController {
     public VoiceRecogController() {
     }

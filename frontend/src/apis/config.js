@@ -1,5 +1,5 @@
 // API 기본 설정
-const API_BASE_URL = 'http://localhost:8000/api';
+const API_BASE_URL = '';
 
 export const API_CONFIG = {
   BASE_URL: API_BASE_URL,
@@ -13,44 +13,44 @@ export const API_CONFIG = {
 export const API_ENDPOINTS = {
   // 사용자 관련
   USER: {
-    LOGIN: '/auth/login',
-    SIGNUP: '/user/signup',
-    LOGOUT: '/user/logout',
-    PROFILE: '/user/profile',
+    LOGIN: '/api/auth/login',
+    SIGNUP: '/api/user/signup',
+    LOGOUT: '/api/user/logout',
+    PROFILE: '/api/user/profile',
   },
   
   // 은행 계좌 관련
   BANK_ACCOUNT: {
-    LIST: '/bankaccount/list',
-    TRANSFER: '/bankaccount/transfer',
-    DETAIL: '/bankaccount/detail',
+    LIST: '/api/bankaccount/list',
+    TRANSFER: '/api/bankaccount/transfer',
+    DETAIL: '/api/bankaccount/detail',
   },
   
   // 로그 관련
   LOG: {
-    LIST: '/log/list',
-    CREATE: '/log/create',
-    DELETE: '/log/delete',
+    LIST: '/api/log/list',
+    CREATE: '/api/log/create',
+    DELETE: '/api/log/delete',
   },
   
   // 북마크 관련
   BOOKMARK: {
-    LIST: '/bookmark/list',
-    CREATE: '/bookmark/create',
-    DELETE: '/bookmark/delete',
-    UPDATE: '/bookmark/update',
+    LIST: '/api/bookmark/list',
+    CREATE: '/api/bookmark/create',
+    DELETE: '/api/bookmark/delete',
+    UPDATE: '/api/bookmark/update',
   },
   
   // 음성 인식 관련
   VOICE: {
-    RECOGNIZE: '/voice/recognize',
-    WEBSOCKET: '/voice/websocket',
+    RECOGNIZE: '/api/voice/recognize',
+    WEBSOCKET: '/api/voice/websocket',
   },
   
   // 뉴스 관련
   NEWS: {
-    LIST: '/news/list',
-    DETAIL: '/news/detail',
-    SEARCH: '/news/search',
+    LIST: '/api/news/list',
+    DETAIL: '/api/news/detail',
+    SEARCH: '/api/news/search',
   }
 }; 

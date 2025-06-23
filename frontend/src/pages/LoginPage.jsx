@@ -32,10 +32,13 @@ const LoginPage = () => {
     try {
       // const response = await axios.post('/users/login', loginData);
       const response = await userApi.login(loginData)
-      if (response.status === 200) {
+	console.log('response',response); 
+      if (response) {
         // 로그인 성공 시 메인 페이지로 이동
-        navigate('/users/main');
+        console.log('navigate 호출!'); 
+	navigate('/users/main');
       }
+	console.log('out of if  navigate 호출!'); 
     } catch (error) {
       setErrorMessage('로그인에 실패했습니다.');
     }

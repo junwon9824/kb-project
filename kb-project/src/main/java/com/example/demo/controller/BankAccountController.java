@@ -32,14 +32,14 @@ public class BankAccountController {
     // 1. 특정 유저의 계좌 목록 조회 (userid로 조회)
     @GetMapping("/user/{userid}")
     public List<BankAccount> getBankAccountsByUser(@PathVariable String userid) {
-        User user = userService.getUserByUserid(userid);
+        User user = userService.getUserByUserId(userid);
         return bankAccountService.getBankAccountByUser(user);
     }
 
     // 2. 계좌 생성 (POST)
     @PostMapping
     public BankAccount createBankAccount(@RequestBody BankAccount bankAccount, @RequestParam String userid) {
-        User user = userService.getUserByUserid(userid);
+        User user = userService.getUserByUserId(userid);
         String bankname = bankAccount.getBank().getBankname();
         Bank bank = bankService.getBankBybankname(bankname);
         return bankAccountService.createBankAccount(bankAccount, bank, user);

@@ -14,7 +14,8 @@ class ApiClient {
     
     // 로컬 스토리지에서 토큰 가져오기
     const token = localStorage.getItem('authToken');
-    if (token) {
+    console.log("headers",token);
+if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
     
@@ -32,7 +33,7 @@ class ApiClient {
         headers: this.getHeaders(),
         signal: AbortSignal.timeout(this.timeout)
       });
-      
+     console.log("this.getHeaders()",this.getHeaders()); 
       return await this.handleResponse(response);
     } catch (error) {
       throw this.handleError(error);

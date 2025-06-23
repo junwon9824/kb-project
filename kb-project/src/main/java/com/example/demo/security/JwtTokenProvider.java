@@ -72,4 +72,14 @@ public class JwtTokenProvider {
         }
         return null;
     }
+
+    public String getUsername(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.getSubject();
+    }
+
 }

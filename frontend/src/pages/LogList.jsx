@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import { logApi } from '../apis/logApi'; // 실제 경로에 맞게 조정
 import './LogList.css';
 
 const LogList = () => {
@@ -11,8 +11,9 @@ const LogList = () => {
   useEffect(() => {
     const fetchLogs = async () => {
       try {
-        const response = await axios.get(`/log/${accountNumber}`);
-        setLogs(response.data);
+        // 기존: const response = await axios.get(`/log/${accountNumber}`);
+        const response = await logApi.getLogsByAccountNumber(accountNumber);
+        setLogs(response.data ? response.data : response); // 반환값에 따라
       } catch (error) {
         console.error('로그 조회 실패:', error);
       } finally {
@@ -64,4 +65,5 @@ const LogList = () => {
   );
 };
 
-export default LogList; 
+export default LogList;
+

@@ -8,6 +8,7 @@ export const userApi = {
       const response = await api.post(API_ENDPOINTS.USER.LOGIN, loginData);
       
       if (response.token) {
+	console.log("settoken",response.token);
         tokenManager.setToken(response.token);
       }
       

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { bankAccountApi } from '../apis/bankAccountApi'; // 경로에 맞게 수정
 import Header from '../components/Header';
 import './BankAccountList.css';
 
@@ -13,8 +13,9 @@ const BankAccountList = () => {
   useEffect(() => {
     const fetchBankAccounts = async () => {
       try {
-        const response = await axios.get('/bankaccounts');
-        setBankAccounts(response.data);
+        const response = await bankAccountApi.getAccountList();
+        // response가 배열인지, response.data가 배열인지 확인해서 아래 둘 중 하나 선택
+        setBankAccounts(Array.isArray(response) ? response : response.data);
       } catch (error) {
         console.error('계좌 조회 실패:', error);
       } finally {
@@ -48,6 +49,7 @@ const BankAccountList = () => {
   if (loading) {
     return <div>로딩 중...</div>;
   }
+  console.log('bankAccounts:', bankAccounts, Array.isArray(bankAccounts));
 
   return (
     <>
@@ -107,4 +109,5 @@ const BankAccountList = () => {
   );
 };
 
-export default BankAccountList; 
+export default BankAccountList;
+

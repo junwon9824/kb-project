@@ -17,98 +17,100 @@ import com.example.demo.repository.UserRepository;
 @Service
 public class UserService {
 
-	private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-	@Autowired
-	public UserService(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-	public User createUser(UserDto user) {
+    public User createUser(UserDto user) {
 
-		User user2 = user.toEntity();
-		System.out.println("userservice password" + user2.getPassword());
-		return userRepository.save(user2);
-	}
+        User user2 = user.toEntity();
+        System.out.println("userservice password" + user2.getPassword());
+        return userRepository.save(user2);
+    }
 
-	public User updateUser(Long id, User user) {
-		Optional<User> optionalUser = userRepository.findById(id);
+    public User updateUser(Long id, User user) {
+        Optional<User> optionalUser = userRepository.findById(id);
 
-		if (optionalUser.isPresent()) {
-			User user1 = optionalUser.get();
-			user1.setUsername(user.getUsername());
-			user1.setUserid(user.getUserid());
-			user1.setPassword(user.getPassword());
-			user1.setPhone(user.getPhone());
-			user1.setAddress(user.getAddress());
+        if (optionalUser.isPresent()) {
+            User user1 = optionalUser.get();
+            user1.setUsername(user.getUsername());
+            user1.setUserid(user.getUserid());
+            user1.setPassword(user.getPassword());
+            user1.setPhone(user.getPhone());
+            user1.setAddress(user.getAddress());
 
-			return userRepository.save(user1);
-		}
+            return userRepository.save(user1);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public void deleteUser(Long id) {
-		userRepository.deleteById(id);
-	}
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
 
-	public List<User> getAllUsers() {
-		return userRepository.findAll();
-	}
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 
-	public Optional<User> getUserById(Long id) {
-		return userRepository.findById(id);
-	}
+    public Optional<User> getUserById(Long id) {
+        return userRepository.findById(id);
+    }
 
-	public User getUserByUserId(String userid) {
-		return userRepository.findByuserid(userid)
-				.orElseThrow(() -> new NoSuchElementException("해당 사용자를 찾을 수 없습니다: " + userid));
-	}
+    public User getUserByUserId(String userid) {
+        return userRepository.findByuserid(userid)
+                .orElseThrow(() -> new NoSuchElementException("해당 사용자를 찾을 수 없습니다: " + userid));
+    }
 
 
-	public User getUserByUsername(String username) {
-		System.out.println("username" + username);
+    public User getUserByUsername(String username) {
+        System.out.println("username" + username);
 
-		User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username);
 
-		System.out.println("findbyusername" + user.getUserid());
-		return user;
+        System.out.println("findbyusername" + user.getUserid());
+        return user;
 
-	}
+    }
 
-	// User Ip get
-	public String getClientIp(HttpServletRequest request) {
-		String clientIp = request.getHeader("X-Forwarded-For");
-		if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {
-			clientIp = request.getHeader("Proxy-Client-IP");
-		}
-		if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {
-			clientIp = request.getHeader("WL-Proxy-Client-IP");
-		}
-		if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {
-			clientIp = request.getRemoteAddr();
-		}
-		return clientIp;
-	}
+    // User Ip get
+    public String getClientIp(HttpServletRequest request) {
+        String clientIp = request.getHeader("X-Forwarded-For");
+        if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {
+            clientIp = request.getHeader("Proxy-Client-IP");
+        }
+        if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {
+            clientIp = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {
+            clientIp = request.getRemoteAddr();
+        }
+        return clientIp;
+    }
 
-	public User getUserByUsernameAndBankAccount(String username, String bankAccountNumber) {
-		// Example implementation: Adjust based on your actual repository structure
-		return userRepository.findAll().stream()
-				.filter(user -> user.getUsername().equals(username))
-				.filter(user -> user.getBankAccounts().stream()
-						.anyMatch(account -> account.getAccountNumber().equals(bankAccountNumber)))
-				.findFirst()
-				.orElseThrow(() -> new IllegalArgumentException(
-						"User not found with the given username and bank account number"));
-	}
+    public User getUserByUsernameAndBankAccount(String username, String bankAccountNumber) {
+        // Example implementation: Adjust based on your actual repository structure
+        return userRepository.findAll().stream()
+                .filter(user -> user.getUsername().equals(username))
+                .filter(user -> user.getBankAccounts().stream()
+                        .anyMatch(account -> account.getAccountNumber().equals(bankAccountNumber)))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "User not found with the given username and bank account number"));
+    }
 
-	public boolean authenticate(String userid, String password) {
-		User user = userRepository.findByuserid(userid);
-		if (user != null && user.getPassword().equals(password)) {
-			return true;
-		}
-		return false;
-	}
+    public boolean authenticate(String userid, String password) {
+        User user = userRepository.findByuserid(userid)
+                .orElseThrow(() -> new NoSuchElementException("해당 사용자를 찾을 수 없습니다: " + userid));
+
+        if (user != null && user.getPassword().equals(password)) {
+            return true;
+        }
+        return false;
+    }
 
 
 }

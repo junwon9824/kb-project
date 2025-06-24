@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.concurrent.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,7 +50,9 @@ public class MultiAccountTransferConcurrencyTest {
 
         // 수신자 User 생성 및 연결
         String recipientUserId = "junho1131";
-        User recipientUser = userRepository.findByuserid(recipientUserId);
+        User recipientUser = userRepository.findByuserid(recipientUserId)
+                .orElseThrow(() -> new NoSuchElementException("해당 사용자를 찾을 수 없습니다: " + recipientUserId));
+
 
         if (recipientUser == null) {
             recipientUser = new User();
@@ -73,7 +76,9 @@ public class MultiAccountTransferConcurrencyTest {
 
             // 보내는 User 생성 및 연결
             String senderUserId = String.format("userid%d", i);
-            User sender = userRepository.findByuserid(senderUserId);
+            User sender = userRepository.findByuserid(senderUserId).orElseThrow(
+
+            );
             if (sender == null) {
                 sender = new User();
                 sender.setUserid(senderUserId);
@@ -105,10 +110,10 @@ public class MultiAccountTransferConcurrencyTest {
             dto.setCategory("송금");
             dto.setSender_name("user" + i);
             dto.setRecipient_name("정준호");
-            dto.setSenderUserId(str );
+            dto.setSenderUserId(str);
             dto.setRecipientUserId("junho1131");
 
-            User sender = userRepository.findByuserid(str);
+            User sender = userRepository.findByuserid(str).orElseThrow(() -> new NoSuchElementException("해당 사용자를 찾을 수 없습니다: " + str ));
 
             executorService.execute(() -> {
                 try {
@@ -127,7 +132,7 @@ public class MultiAccountTransferConcurrencyTest {
         assertThat(toAccount.getBalance()).isEqualTo(transferAmount * accountCount);
 
 
-        String str= "junho1131";
+        String str = "junho1131";
         // 4. 캐시(Redis)를 사용한 로그 조회 및 개수 검증
         List<LogDto> logs = logService.getLogs(str, toAccountNumber);
         assertThat(logs.size()).isEqualTo(accountCount);

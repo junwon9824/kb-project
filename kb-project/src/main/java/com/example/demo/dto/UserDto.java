@@ -45,7 +45,6 @@ public class UserDto {
 				.address(address)
 				.disabled(disabled)
 				.bankAccounts(bankAccounts)
-				.account_password(account_password)
 				.clientSafeIp(clientSafeIp).build();
 
 	}

@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -61,9 +62,11 @@ class LogServiceCacheEvictTest {
         String bankNumber = "9824";
 
         // 1. 테스트용 User, Account, Log 객체 생성
-        User senderUser = userRepository.findByuserid("junwon9824");
+        User senderUser = userRepository.findByuserid("junwon9824").orElseThrow(()->new NoSuchElementException("유저가 존재하지 " +
+                "않습니다"+ userId));
         BankAccount senderAccount = bankAccountRepository.findByAccountNumber("9824");
-        User recipientUser = userRepository.findByuserid("junho1131");
+        User recipientUser = userRepository.findByuserid("junho1131").orElseThrow(()->new NoSuchElementException("유저가 존재하지 " +
+                "않습니다"+ userId));
         BankAccount recipientAccount = bankAccountRepository.findByAccountNumber("1131");
 
         System.out.println("[디버그] senderUser: " + senderUser);

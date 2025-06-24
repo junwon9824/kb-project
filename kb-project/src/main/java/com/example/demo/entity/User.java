@@ -19,7 +19,7 @@ public class User {
 	@Column(nullable = false)
 	private String password;
 
-	private String ClientSafeIp;
+	private String clientSafeIp;
 
 	private String phone;
 	private String address;

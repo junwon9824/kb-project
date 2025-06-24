@@ -83,7 +83,8 @@ public class BookMarkController {
 	@PostMapping("/transferbookmark")
 	public ResponseEntity<?> transferBookmark(@RequestBody TransferDto log, HttpSession session) {
 		User user = (User) session.getAttribute("user");
-		if (!log.getAccount_password().equals(user.getAccount_password())) {
+		BankAccount bankAccount = bankaccountservice.getBankAccountByAccountnumber(log.getRecipient_banknumber());
+		if (!log.getAccount_password().equals(bankAccount.getPassword())) {
 			return ResponseEntity.status(401).body("비밀번호 오류");
 		}
 		bankaccountservice.transferToUser(log, user);

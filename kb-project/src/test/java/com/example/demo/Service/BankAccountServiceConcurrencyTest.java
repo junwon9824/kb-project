@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 
+import java.util.NoSuchElementException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -36,7 +37,9 @@ class BankAccountServiceConcurrencyTest {
     @BeforeEach
     void setUp() {
         // 테스트 User가 없으면 생성
-        User user = userRepository.findByuserid("junwon9824");
+        User user = userRepository.findByuserid("junwon9824")
+                .orElseThrow(() -> new NoSuchElementException("해당 사용자를 찾을 수 없습니다: " ));
+
 
 //        if (user == null) {
 //            user = new User();

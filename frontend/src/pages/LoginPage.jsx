@@ -1,29 +1,29 @@
-import React, { useState } from 'react';
-import axios from '../apis/axios';
-import { useNavigate } from 'react-router-dom';
-import './LoginPage.css';
-import {userApi} from "../apis";
+import React, { useState } from "react";
+import axios from "../apis/axios";
+import { useNavigate } from "react-router-dom";
+import "./LoginPage.css";
+import { userApi } from "../apis";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const [isRightPanelActive, setIsRightPanelActive] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  
+  const [errorMessage, setErrorMessage] = useState("");
+
   // 로그인 상태
   const [loginData, setLoginData] = useState({
-    userid: '',
-    password: ''
+    userid: "",
+    password: "",
   });
-  
+
   // 회원가입 상태
   const [signupData, setSignupData] = useState({
-    username: '',
-    userid: '',
-    password: '',
-    phone: '',
-    address: '',
-    account_password: '',
-    disabled: false
+    username: "",
+    userid: "",
+    password: "",
+    phone: "",
+    address: "",
+    account_password: "",
+    disabled: false,
   });
 
   // 로그인 처리
@@ -31,16 +31,16 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       // const response = await axios.post('/users/login', loginData);
-      const response = await userApi.login(loginData)
-	console.log('response',response); 
+      const response = await userApi.login(loginData);
+      console.log("response", response);
       if (response) {
         // 로그인 성공 시 메인 페이지로 이동
-        console.log('navigate 호출!'); 
-	navigate('/users/main');
+        console.log("navigate 호출!");
+        navigate("/users/main");
       }
-	console.log('out of if  navigate 호출!'); 
+      console.log("out of if  navigate 호출!");
     } catch (error) {
-      setErrorMessage('로그인에 실패했습니다.');
+      setErrorMessage("로그인에 실패했습니다.");
     }
   };
 
@@ -48,14 +48,14 @@ const LoginPage = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/users', signupData);
+      const response = await axios.post("/users", signupData);
       if (response.status === 200) {
         // 회원가입 성공 시 로그인 패널로 전환
         setIsRightPanelActive(false);
-        setErrorMessage('');
+        setErrorMessage("");
       }
     } catch (error) {
-      setErrorMessage('회원가입에 실패했습니다.');
+      setErrorMessage("회원가입에 실패했습니다.");
     }
   };
 
@@ -63,14 +63,14 @@ const LoginPage = () => {
   const handleLoginChange = (e) => {
     setLoginData({
       ...loginData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   const handleSignupChange = (e) => {
     setSignupData({
       ...signupData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -78,24 +78,28 @@ const LoginPage = () => {
   const handleDisabledChange = (value) => {
     setSignupData({
       ...signupData,
-      disabled: value
+      disabled: value,
     });
   };
 
   return (
-    <div className={`container ${isRightPanelActive ? 'right-panel-active' : ''}`}>
+    <div
+      className={`container ${isRightPanelActive ? "right-panel-active" : ""}`}
+    >
       {errorMessage && (
-        <div style={{ color: 'red', textAlign: 'center', marginBottom: '20px' }}>
+        <div
+          style={{ color: "red", textAlign: "center", marginBottom: "20px" }}
+        >
           {errorMessage}
         </div>
       )}
-      
+
       {/* 로그인 폼 */}
       <div className="container__form container--signin">
         <form className="form" onSubmit={handleLogin}>
           <h2 className="form__title">로그인</h2>
           <input
-            style={{ outline: '2px solid #e9e9e9', borderRadius: '5px' }}
+            style={{ outline: "2px solid #e9e9e9", borderRadius: "5px" }}
             type="text"
             placeholder="아이디"
             className="input"
@@ -104,7 +108,7 @@ const LoginPage = () => {
             onChange={handleLoginChange}
           />
           <input
-            style={{ outline: '2px solid #e9e9e9', borderRadius: '5px' }}
+            style={{ outline: "2px solid #e9e9e9", borderRadius: "5px" }}
             type="password"
             placeholder="비밀번호"
             className="input"
@@ -123,7 +127,7 @@ const LoginPage = () => {
         <form className="form" onSubmit={handleSignup}>
           <h2 className="form__title">회원가입</h2>
           <input
-            style={{ outline: '2px solid #e9e9e9', borderRadius: '5px' }}
+            style={{ outline: "2px solid #e9e9e9", borderRadius: "5px" }}
             type="text"
             placeholder="이름"
             className="input"
@@ -134,7 +138,7 @@ const LoginPage = () => {
           />
           <input
             type="text"
-            style={{ outline: '2px solid #e9e9e9', borderRadius: '5px' }}
+            style={{ outline: "2px solid #e9e9e9", borderRadius: "5px" }}
             placeholder="아이디"
             className="input"
             name="userid"
@@ -146,7 +150,7 @@ const LoginPage = () => {
             type="password"
             placeholder="비밀번호"
             className="input"
-            style={{ outline: '2px solid #e9e9e9', borderRadius: '5px' }}
+            style={{ outline: "2px solid #e9e9e9", borderRadius: "5px" }}
             name="password"
             value={signupData.password}
             onChange={handleSignupChange}
@@ -154,7 +158,7 @@ const LoginPage = () => {
           />
           <input
             type="text"
-            style={{ outline: '2px solid #e9e9e9', borderRadius: '5px' }}
+            style={{ outline: "2px solid #e9e9e9", borderRadius: "5px" }}
             placeholder="전화번호"
             className="input"
             name="phone"
@@ -166,7 +170,7 @@ const LoginPage = () => {
             type="text"
             placeholder="주소"
             className="input"
-            style={{ outline: '2px solid #e9e9e9', borderRadius: '5px' }}
+            style={{ outline: "2px solid #e9e9e9", borderRadius: "5px" }}
             name="address"
             value={signupData.address}
             onChange={handleSignupChange}
@@ -176,14 +180,14 @@ const LoginPage = () => {
             type="text"
             placeholder="계좌비밀번호"
             className="input"
-            style={{ outline: '2px solid #e9e9e9', borderRadius: '5px' }}
+            style={{ outline: "2px solid #e9e9e9", borderRadius: "5px" }}
             name="account_password"
             value={signupData.account_password}
             onChange={handleSignupChange}
             required
           />
 
-          <div style={{ marginTop: '10px' }}>
+          <div style={{ marginTop: "10px" }}>
             <input
               type="radio"
               id="disabled"
@@ -238,4 +242,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage; 
+export default LoginPage;

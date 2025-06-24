@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -60,10 +61,10 @@ public class UserService {
 	}
 
 	public User getUserByUserId(String userid) {
-		User user = userRepository.findByuserid(userid);
-		return user;
-
+		return userRepository.findByuserid(userid)
+				.orElseThrow(() -> new NoSuchElementException("해당 사용자를 찾을 수 없습니다: " + userid));
 	}
+
 
 	public User getUserByUsername(String username) {
 		System.out.println("username" + username);

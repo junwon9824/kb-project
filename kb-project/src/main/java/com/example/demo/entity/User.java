@@ -19,6 +19,15 @@ public class User {
 	@Column(nullable = false)
 	private String password;
 
+	private String ClientSafeIp;
+
+	private String phone;
+	private String address;
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<BankAccount> bankAccounts = new ArrayList<>();
+
+
 	private boolean disabled;
 
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -27,5 +36,8 @@ public class User {
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name = "role_id")
 	)
+
 	private Set<Role> roles = new HashSet<>();
+
+
 }

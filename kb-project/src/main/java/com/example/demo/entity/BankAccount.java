@@ -41,6 +41,8 @@ public class BankAccount extends BaseEntity {
 	// 주 계좌 여부
 	private boolean mainAccount;
 
+	private String password;
+
 	// 이 계좌에서 보낸 거래 내역
 	@OneToMany(mappedBy = "senderAccount", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Log> sentLogs = new ArrayList<>();

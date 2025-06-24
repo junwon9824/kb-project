@@ -41,9 +41,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         String header = request.getHeader("Authorization");
         String token = jwtTokenProvider.resolveToken(header);
 
+
         if (token != null && jwtTokenProvider.validateToken(token)) {
             String username = jwtTokenProvider.getUsername(token);
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+            log.info("권한 목록: {}", userDetails.getAuthorities());
 
             UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(
@@ -52,6 +55,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             log.info("JWT 인증 성공: user={}, uri={}", username, path);
+
         } else {
             log.warn("JWT 인증 실패: uri={}, token={}", path, token);
         }

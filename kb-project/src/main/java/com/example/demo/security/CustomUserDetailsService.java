@@ -1,13 +1,16 @@
 package com.example.demo.security;
 
+import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,17 +22,34 @@ public class CustomUserDetailsService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        User user = userRepository.findByuserid(username).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다: \" + username"));
+//
+//
+//        return new org.springframework.security.core.userdetails.User(
+//                user.getUserid(),
+//                user.getPassword(),
+//                user.getRoles().stream()
+//                        .map(role -> new SimpleGrantedAuthority(role.getName()))
+//                        .collect(Collectors.toList())
+//        );
+//    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByuserid(username).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다: \" + username"));
+        User user = userRepository.findByuserid(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
+        Role role = user.getRole();
+        List<GrantedAuthority> authorities = List.of(
+                new SimpleGrantedAuthority("ROLE_" + role.getName())
+        );
 
         return new org.springframework.security.core.userdetails.User(
-                user.getUserid(),
-                user.getPassword(),
-                user.getRoles().stream()
-                        .map(role -> new SimpleGrantedAuthority(role.getName()))
-                        .collect(Collectors.toList())
-        );
+                user.getUserid(), user.getPassword(), authorities);
     }
+
+
+
 }

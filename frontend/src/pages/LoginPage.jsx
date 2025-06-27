@@ -48,7 +48,8 @@ const LoginPage = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/users", signupData);
+      console.log("handle signup");
+      const response = await userApi.signup(signupData);
       if (response.status === 200) {
         // 회원가입 성공 시 로그인 패널로 전환
         setIsRightPanelActive(false);

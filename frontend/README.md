@@ -24,11 +24,13 @@ KB Bank 4조 프로젝트의 React 프론트엔드 애플리케이션입니다.
 ## 설치 및 실행
 
 ### 1. 의존성 설치
+
 ```bash
 npm install
 ```
 
 ### 2. 개발 서버 실행
+
 ```bash
 npm start
 ```
@@ -36,6 +38,7 @@ npm start
 애플리케이션이 `http://localhost:3000`에서 실행됩니다.
 
 ### 3. 프로덕션 빌드
+
 ```bash
 npm run build
 ```
@@ -77,19 +80,23 @@ src/
 ## 주요 특징
 
 ### 1. 반응형 디자인
+
 - 모바일 친화적 레이아웃
 - Bootstrap 기반 반응형 컴포넌트
 
 ### 2. 접근성
+
 - 장애인을 위한 별도 인터페이스 제공
 - 음성 인식 및 합성 기능
 
 ### 3. 사용자 경험
+
 - 직관적인 네비게이션
 - 실시간 피드백
 - 모달 기반 상세보기
 
 ### 4. 성능 최적화
+
 - React Hooks 활용
 - 컴포넌트 최적화
 - 효율적인 상태 관리
@@ -97,47 +104,52 @@ src/
 ## 개발 가이드
 
 ### 컴포넌트 작성 규칙
+
 - 함수형 컴포넌트 사용
 - Hooks 기반 상태 관리
 - CSS 모듈 또는 인라인 스타일 사용
 
 ### API 호출 패턴
+
 ```javascript
-import axios from 'axios';
+import axios from "axios";
 
 // GET 요청
-const response = await axios.get('/api/endpoint');
+const response = await axios.get("/api/endpoint");
 
 // POST 요청
-const response = await axios.post('/api/endpoint', data);
+const response = await axios.post("/api/endpoint", data);
 
 // 에러 처리
 try {
-  const response = await axios.get('/api/endpoint');
+  const response = await axios.get("/api/endpoint");
 } catch (error) {
-  console.error('API 호출 실패:', error);
+  console.error("API 호출 실패:", error);
 }
 ```
 
 ### 라우팅 설정
+
 ```javascript
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 <Routes>
   <Route path="/users/login" element={<LoginPage />} />
   <Route path="/users/main" element={<MainPage />} />
   <Route path="/transfer" element={<TransferPage />} />
-</Routes>
+</Routes>;
 ```
 
 ## 배포
 
 ### 1. 빌드
+
 ```bash
 npm run build
 ```
 
 ### 2. 정적 파일 서빙
+
 빌드된 `build` 폴더의 내용을 웹 서버에 배포하세요.
 
 ## 라이선스
@@ -148,4 +160,4 @@ npm run build
 
 - **프로젝트명**: KB Bank 4조
 - **기술 스택**: React, Spring Boot, MySQL
-- **목적**: 은행 서비스 시뮬레이션 
+- **목적**: 은행 서비스 시뮬레이션

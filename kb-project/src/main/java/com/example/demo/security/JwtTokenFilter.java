@@ -33,7 +33,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String path = request.getRequestURI();
 
-        if (path.equals("/auth/login")) {
+
+        if (path.equals("/auth/login") ||path.equals("/api/users")   ) {
+            log.info("in do filter .. skiping");
             chain.doFilter(request, response);
             return;
         }

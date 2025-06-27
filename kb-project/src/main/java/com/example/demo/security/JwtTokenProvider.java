@@ -101,4 +101,13 @@ public class JwtTokenProvider {
         return claims.getSubject();
     }
 
+    public Date getExpirationDateFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.getExpiration();
+    }
+
 }

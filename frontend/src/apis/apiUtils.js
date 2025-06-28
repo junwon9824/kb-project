@@ -16,14 +16,11 @@ class ApiClient {
     const token = localStorage.getItem("authToken");
     console.log("headers", token);
     
-    // 토큰이 없으면 로그인 페이지로 리다이렉트
-    if (!token) {
-      console.log("토큰이 없음 - 로그인 페이지로 리다이렉트");
-      window.location.href = "/login";
-      return headers;
+    // 토큰이 있으면 Authorization 헤더 추가
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
     }
     
-    headers["Authorization"] = `Bearer ${token}`;
     return headers;
   }
 
@@ -101,7 +98,7 @@ class ApiClient {
       if (response.status === 401 || response.status === 403) {
         console.log("토큰 만료 또는 권한 없음 - 토큰 삭제 후 로그인 페이지로 이동");
         tokenManager.removeToken();
-        window.location.href = "/login";
+        window.location.href = "/users/login";
         return;
       }
 

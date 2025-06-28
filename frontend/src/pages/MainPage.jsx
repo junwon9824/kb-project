@@ -9,6 +9,14 @@ const MainPage = () => {
   const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
+    // 토큰 확인
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      console.log("메인 페이지: 토큰이 없음 - 로그인 페이지로 이동");
+      navigate("/users/login");
+      return;
+    }
+
     // URL 파라미터에서 성공 메시지 확인
     const params = new URLSearchParams(location.search);
     const message = params.get('successMessage');
@@ -16,7 +24,7 @@ const MainPage = () => {
       setSuccessMessage(message);
       alert(message);
     }
-  }, [location]);
+  }, [location, navigate]);
 
   const handleNavigation = (path) => {
     navigate(path);

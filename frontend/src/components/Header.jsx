@@ -1,14 +1,25 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { userApi } from "../apis/userApi";
 import "./Header.css";
 
 const Header = () => {
   const navigate = useNavigate();
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
-  const handleLogout = () => {
-    // 로그아웃 처리
-    navigate("/users/login");
+  const handleLogout = async () => {
+    try {
+      // 서버에 로그아웃 요청 (토큰도 자동으로 제거됨)
+      await userApi.logout();
+      console.log("로그아웃 성공");
+      
+      // 로그인 페이지로 이동
+      navigate("/users/login");
+    } catch (error) {
+      console.error("로그아웃 실패:", error);
+      // 에러가 발생해도 토큰은 제거되고 로그인 페이지로 이동
+      navigate("/users/login");
+    }
   };
 
   const toggleMobileNav = () => {

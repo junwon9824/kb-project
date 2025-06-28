@@ -8,6 +8,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const [isRightPanelActive, setIsRightPanelActive] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   // 로그인 상태
   const [loginData, setLoginData] = useState({
@@ -29,18 +30,36 @@ const LoginPage = () => {
   // 로그인 처리
   const handleLogin = async (e) => {
     e.preventDefault();
+    
+    if (isLoading) {
+      console.log("로그인 진행 중... 중복 요청 방지");
+      return;
+    }
+    
+    setIsLoading(true);
+    setErrorMessage("");
+    
     try {
-      // const response = await axios.post('/users/login', loginData);
+      console.log("로그인 시도:", loginData);
       const response = await userApi.login(loginData);
-      console.log("response", response);
-      if (response) {
-        // 로그인 성공 시 메인 페이지로 이동
-        console.log("navigate 호출!");
-        navigate("/users/main");
+      console.log("로그인 응답:", response);
+      
+      if (response && response.token) {
+        console.log("토큰 저장됨:", response.token);
+        // 토큰 저장 후 약간의 지연을 두고 메인 페이지로 이동
+        setTimeout(() => {
+          console.log("메인 페이지로 이동 시도...");
+          navigate("/users/main");
+        }, 100);
+      } else {
+        console.error("로그인 응답에 토큰이 없음:", response);
+        setErrorMessage("로그인에 실패했습니다.");
       }
-      console.log("out of if  navigate 호출!");
     } catch (error) {
+      console.error("로그인 에러:", error);
       setErrorMessage("로그인에 실패했습니다.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -115,8 +134,8 @@ const LoginPage = () => {
             value={loginData.password}
             onChange={handleLoginChange}
           />
-          <button type="submit" className="custom-btn btn-3">
-            <span>로그인</span>
+          <button type="submit" className="custom-btn btn-3" disabled={isLoading}>
+            <span>{isLoading ? "로그인 중..." : "로그인"}</span>
           </button>
         </form>
       </div>

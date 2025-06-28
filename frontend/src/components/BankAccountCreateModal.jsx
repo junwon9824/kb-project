@@ -58,7 +58,27 @@ const BankAccountCreateModal = ({ isOpen, onClose, onSuccess, userid }) => {
             onClose(); // 모달 닫기
         } catch (error) {
             console.error('계좌 생성 실패:', error);
-            setError('계좌 생성에 실패했습니다. 다시 시도해주세요.');
+            
+            // 서버에서 전달된 에러 메시지 확인
+            let errorMessage = '계좌 생성에 실패했습니다. 다시 시도해주세요.';
+            
+            if (error.response && error.response.data) {
+                // 서버에서 전달된 에러 메시지가 있는 경우
+                if (error.response.data.message) {
+                    errorMessage = error.response.data.message;
+                } else if (typeof error.response.data === 'string') {
+                    errorMessage = error.response.data;
+                }
+            } else if (error.message) {
+                // JavaScript 에러 메시지
+                if (error.message.includes('동일한 계좌번호')) {
+                    errorMessage = error.message;
+                } else if (error.message.includes('404')) {
+                    errorMessage = '서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.';
+                }
+            }
+            
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }

@@ -93,10 +93,25 @@ public class BankAccountController {
     // 2. 계좌 생성 (POST)
     @PostMapping
     public BankAccount createBankAccount(@RequestBody BankAccount bankAccount, @RequestParam String userid) {
-        User user = userService.getUserByUserId(userid);
-        String bankname = bankAccount.getBank().getBankname();
-        Bank bank = bankService.getBankBybankname(bankname);
-        return bankAccountService.createBankAccount(bankAccount, bank, user);
+        try {
+            User user = userService.getUserByUserId(userid);
+            String bankname = bankAccount.getBank().getBankname();
+            Bank bank = bankService.getBankBybankname(bankname);
+            
+            // 중복 계좌 검증
+            BankAccount existingAccount = bankAccountService.getBankAccountByAccountnumber(bankAccount.getAccountNumber());
+            if (existingAccount != null) {
+                throw new RuntimeException("동일한 계좌번호가 이미 존재합니다: " + bankAccount.getAccountNumber());
+            }
+            
+            return bankAccountService.createBankAccount(bankAccount, bank, user);
+        } catch (RuntimeException e) {
+            log.error("계좌 생성 실패: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            log.error("계좌 생성 중 예외 발생: {}", e.getMessage(), e);
+            throw new RuntimeException("계좌 생성에 실패했습니다: " + e.getMessage());
+        }
     }
 
     // 3. 계좌 단건 조회

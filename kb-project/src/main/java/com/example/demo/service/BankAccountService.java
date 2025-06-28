@@ -133,6 +133,12 @@ public class BankAccountService {
     }
 
     public BankAccount createBankAccount(BankAccount account, Bank bank, User user) {
+        // 중복 계좌 검증
+        BankAccount existingAccount = bankAccountRepository.findByAccountNumber(account.getAccountNumber());
+        if (existingAccount != null) {
+            throw new IllegalArgumentException("동일한 계좌번호가 이미 존재합니다: " + account.getAccountNumber());
+        }
+        
         account.setUser(user);
         account.setBank(bank);
         return bankAccountRepository.save(account);
@@ -184,17 +190,34 @@ public class BankAccountService {
                         recipientAcc.getAccountNumber());
 
                 recipientAcc.setAmount(recipientAcc.getAmount() + sendAmount);
-                log.info("after recipientAcc");
+                logger.info("after recipientAcc");
+
+                // 수동으로 BankAccountDto 생성
+                BankAccountDto senderDto = new BankAccountDto();
+                senderDto.setId(senderAcc.getId());
+                senderDto.setAccountNumber(senderAcc.getAccountNumber());
+                senderDto.setAmount(senderAcc.getAmount());
+                senderDto.setBank(senderAcc.getBank());
+                senderDto.setUser(senderAcc.getUser());
+                senderDto.setMainAccount(senderAcc.isMainAccount());
+
+                BankAccountDto recipientDto = new BankAccountDto();
+                recipientDto.setId(recipientAcc.getId());
+                recipientDto.setAccountNumber(recipientAcc.getAccountNumber());
+                recipientDto.setAmount(recipientAcc.getAmount());
+                recipientDto.setBank(recipientAcc.getBank());
+                recipientDto.setUser(recipientAcc.getUser());
+                recipientDto.setMainAccount(recipientAcc.isMainAccount());
 
                 updateBankAccount(senderAcc.toDto());
                 updateBankAccount(recipientAcc.toDto());
 
-                log.info("before sender logggg");
-                log.info("dto.tostring()))))" + dto.toString());
+                logger.info("before sender logggg");
+                logger.info("dto.tostring()))))" + dto.toString());
 
                 Log senderLog = dto.toEntity(); // 송금 로그
-                log.info("before recipientLog logggg" + recipientAcc.toString());
-                log.info("after senderLog logggg" + senderLog.toString());
+                logger.info("before recipientLog logggg" + recipientAcc.toString());
+                logger.info("after senderLog logggg" + senderLog.toString());
 
                 Log recipientLog = TransferDto.builder()
                         .amount(dto.getAmount())
@@ -209,11 +232,11 @@ public class BankAccountService {
                         .senderAccount(senderAcc)
                         .build()
                         .toEntity(); // 입금 로그
-                log.info("before logService ");
+                logger.info("before logService ");
 
                 senderLog.setCategory("송금");
-                log.info("senderLogsenderLog" + senderLog.toString());
-                log.info("recipientLogrecipientLog" + recipientLog.toString());
+                logger.info("senderLogsenderLog" + senderLog.toString());
+                logger.info("recipientLogrecipientLog" + recipientLog.toString());
 
                 logService.transfersave(senderLog);
                 logService.transfersave(recipientLog);

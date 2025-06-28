@@ -105,4 +105,29 @@ public class BankAccount extends BaseEntity {
 	public String getPassword() {
 		return this.password;
 	}
+
+	// 수동 setter 메서드들 추가
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setAmount(Long amount) {
+		this.amount = amount;
+	}
+
+	public void setMainAccount(boolean mainAccount) {
+		this.mainAccount = mainAccount;
+	}
+
+	public void setBank(Bank bank) {
+		this.bank = bank;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 }

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.Map;
 
 import com.example.demo.repository.UserRepository;
 import com.example.demo.security.JwtTokenProvider;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.Login;
@@ -33,6 +35,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -55,28 +58,28 @@ public class UserController {
 
     private final RedisTemplate redisTemplate;
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public User getUser(@PathVariable("id") Long id) {
         return userService.getUserById(id).orElse(null);
     }
 
-    @GetMapping("/users")
+    @GetMapping
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    @PostMapping("/users")
+    @PostMapping
     public User createUser(@RequestBody UserDto userDto, HttpServletRequest request) {
         userDto.setClientSafeIp(request.getRemoteAddr());
         return userService.createUser(userDto);
     }
 
-    @PutMapping("/users/{id}")
+    @PutMapping("/{id}")
     public User updateUser(@PathVariable("id") Long id, @RequestBody UserDto userDto) {
         return userService.updateUser(id, userDto.toEntity());
     }
 
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable("id") Long id) {
         userService.deleteUser(id);
     }
@@ -92,7 +95,7 @@ public class UserController {
 //		}
 //	}
 
-    @PostMapping("users/logout")
+    @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
 
         String bearerToken = request.getHeader("Authorization"); // Authorization 헤더 가져오기
@@ -114,9 +117,33 @@ public class UserController {
 
     }
 
-    @GetMapping("/users/me")
-    public User getCurrentUser(HttpSession session) {
-        return (User) session.getAttribute("user");
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(HttpServletRequest request) {
+        try {
+            String bearerToken = request.getHeader("Authorization");
+            if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {
+                return ResponseEntity.status(401).body("Authorization header is missing or invalid");
+            }
+            
+            String token = jwtTokenProvider.resolveToken(bearerToken);
+            if (token == null) {
+                return ResponseEntity.status(401).body("Invalid token format");
+            }
+            
+            if (!jwtTokenProvider.validateToken(token)) {
+                return ResponseEntity.status(401).body("Token is invalid or expired");
+            }
+            
+            String userid = jwtTokenProvider.getUsername(token);
+            
+            // 간단한 Map으로 필요한 정보만 반환 (JSON 직렬화 문제 방지)
+            return ResponseEntity.ok(Map.of(
+                "userid", userid,
+                "username", "test_user"
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Internal server error: " + e.getMessage());
+        }
     }
 
     // 송금 등 기타 기능은 별도 RESTful 엔드포인트로 분리 필요

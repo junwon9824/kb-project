@@ -21,35 +21,38 @@ export const API_ENDPOINTS = {
 
   // 은행 계좌 관련
   BANK_ACCOUNT: {
-    LIST: "/api/bankaccount/list",
-    TRANSFER: "/api/bankaccount/transfer",
-    DETAIL: "/api/bankaccount/detail",
+    LIST: "/api/bankaccounts",
+    CREATE: "/api/bankaccounts",
+    DELETE: "/api/bankaccounts",
+    SET_MAIN: "/api/bankaccounts/mainAccount",
+    TRANSFER: "/api/bankaccounts/transfer",
+    DETAIL: "/api/bankaccounts",
   },
 
   // 로그 관련
   LOG: {
-    LIST: "/api/log/list",
-    CREATE: "/api/log/create",
-    DELETE: "/api/log/delete",
+    LIST: "/api/log",
+    CREATE: "/api/log",
+    DELETE: "/api/log",
   },
 
   // 북마크 관련
   BOOKMARK: {
-    LIST: "/api/bookmark/list",
-    CREATE: "/api/bookmark/create",
-    DELETE: "/api/bookmark/delete",
-    UPDATE: "/api/bookmark/update",
+    LIST: "/api/bookmarks",
+    CREATE: "/api/bookmarks",
+    DELETE: "/api/bookmarks",
+    UPDATE: "/api/bookmarks",
   },
 
   // 음성 인식 관련
   VOICE: {
-    RECOGNIZE: "/api/voice/recognize",
+    RECOGNIZE: "/api/voice",
     WEBSOCKET: "/api/voice/websocket",
   },
 
   // 뉴스 관련
   NEWS: {
-    LIST: "/api/news/list",
+    LIST: "/api/news",
     DETAIL: "/api/news/detail",
     SEARCH: "/api/news/search",
   },

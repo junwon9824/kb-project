@@ -15,6 +15,7 @@ import com.example.demo.entity.User;
 import com.example.demo.service.NewsService;
 
 @RestController
+@RequestMapping("/api/news")
 public class NewsController {
 
     @Autowired

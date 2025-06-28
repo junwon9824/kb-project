@@ -28,7 +28,7 @@ import com.example.demo.service.BookMarkService;
 import com.example.demo.service.UserService;
 
 @RestController
-@RequestMapping("/bookmarks")
+@RequestMapping("/api/bookmarks")
 public class BookMarkController {
 
 	@Autowired

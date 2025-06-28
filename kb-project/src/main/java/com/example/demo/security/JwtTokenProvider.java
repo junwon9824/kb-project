@@ -3,7 +3,8 @@ package com.example.demo.security;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.security.core.Authentication;
@@ -15,15 +16,16 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
-@Slf4j
 public class JwtTokenProvider {
+
+    private static final Logger log = LoggerFactory.getLogger(JwtTokenProvider.class);
 
     @Value("${jwt.secret}")
     private String secretKey;
 
     private Key key;
 
-    private final long validityInMilliseconds = 3600000; // 1시간
+    private final long validityInMilliseconds = 86400000; // 24시간 (개발용)
 
     @PostConstruct
     protected void init() {

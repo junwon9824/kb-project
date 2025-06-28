@@ -45,6 +45,10 @@ export const userApi = {
   getProfile: async () => {
     try {
       const response = await api.get(API_ENDPOINTS.USER.PROFILE);
+      // ResponseEntity 응답 처리
+      if (response && response.data) {
+        return response.data;
+      }
       return response;
     } catch (error) {
       throw new Error(error.message || "프로필 조회에 실패했습니다.");

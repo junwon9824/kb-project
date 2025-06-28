@@ -8,14 +8,19 @@ import com.example.demo.service.BankAccountService;
 import com.example.demo.service.BankService;
 import com.example.demo.service.UserService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/bankaccounts")
+@RequestMapping("/api/bankaccounts")
 public class BankAccountController {
+
+    private static final Logger log = LoggerFactory.getLogger(BankAccountController.class);
 
     private final BankAccountService bankAccountService;
     private final BankService bankService;
@@ -31,9 +36,58 @@ public class BankAccountController {
 
     // 1. 특정 유저의 계좌 목록 조회 (userid로 조회)
     @GetMapping("/user/{userid}")
-    public List<BankAccount> getBankAccountsByUser(@PathVariable String userid) {
-        User user = userService.getUserByUserId(userid);
-        return bankAccountService.getBankAccountByUser(user);
+    public List<Map<String, Object>> getBankAccountsByUser(@PathVariable String userid) {
+        log.info("=== 계좌 목록 조회 요청 시작 ===");
+        log.info("요청된 userid: {}", userid);
+        
+        try {
+            // 데이터베이스에 있는 모든 사용자 조회 (디버깅용)
+            List<User> allUsers = userService.getAllUsers();
+            log.info("=== 데이터베이스의 모든 사용자 ===");
+            for (User u : allUsers) {
+                log.info("사용자: id={}, userid={}, username={}", u.getId(), u.getUserid(), u.getUsername());
+            }
+            log.info("=== 모든 사용자 목록 끝 ===");
+            
+            User user = userService.getUserByUserId(userid);
+            if (user == null) {
+                log.error("사용자를 찾을 수 없습니다: userid={}", userid);
+                throw new RuntimeException("사용자를 찾을 수 없습니다: " + userid);
+            }
+            log.info("사용자 조회 성공: userid={}, username={}, id={}", user.getUserid(), user.getUsername(), user.getId());
+            
+            List<BankAccount> bankAccounts = bankAccountService.getBankAccountByUser(user);
+            log.info("계좌 목록 조회 성공: 계좌 개수={}", bankAccounts.size());
+            
+            // 각 계좌 정보를 자세히 로그로 출력
+            for (BankAccount account : bankAccounts) {
+                log.info("계좌 정보: id={}, accountNumber={}, amount={}, mainAccount={}, bank={}, userId={}", 
+                    account.getId(), account.getAccountNumber(), account.getAmount(), 
+                    account.isMainAccount(), account.getBank() != null ? account.getBank().getBankname() : "null",
+                    account.getUser() != null ? account.getUser().getUserid() : "null");
+            }
+            
+            // BankAccount 엔티티를 Map으로 변환 (수동 getter 사용)
+            List<Map<String, Object>> result = bankAccounts.stream()
+                    .map(account -> {
+                        Map<String, Object> accountMap = new java.util.HashMap<>();
+                        accountMap.put("id", account.getId());
+                        accountMap.put("accountNumber", account.getAccountNumber());
+                        accountMap.put("amount", account.getAmount());
+                        accountMap.put("mainAccount", account.isMainAccount());
+                        accountMap.put("bankName", account.getBank() != null ? account.getBank().getBankname() : null);
+                        return accountMap;
+                    })
+                    .collect(java.util.stream.Collectors.toList());
+            
+            log.info("계좌 목록 변환 완료: {}", result);
+            log.info("=== 계좌 목록 조회 요청 완료 ===");
+            return result;
+            
+        } catch (Exception e) {
+            log.error("계좌 목록 조회 실패: userid={}, error={}", userid, e.getMessage(), e);
+            throw e;
+        }
     }
 
     // 2. 계좌 생성 (POST)

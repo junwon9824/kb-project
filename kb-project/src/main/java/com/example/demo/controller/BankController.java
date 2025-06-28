@@ -17,7 +17,7 @@ import com.example.demo.entity.Bank;
 import com.example.demo.service.BankService;
 
 @RestController
-@RequestMapping("/banks")
+@RequestMapping("/api/banks")
 public class BankController {
 
 	private final BankService bankService;

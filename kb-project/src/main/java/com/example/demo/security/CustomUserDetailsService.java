@@ -42,9 +42,14 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         Role role = user.getRole();
-        List<GrantedAuthority> authorities = List.of(
-                new SimpleGrantedAuthority("ROLE_" + role.getName())
-        );
+        List<GrantedAuthority> authorities;
+        
+        if (role != null) {
+            authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+        } else {
+            // role이 null인 경우 기본 권한 부여
+            authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        }
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUserid(), user.getPassword(), authorities);

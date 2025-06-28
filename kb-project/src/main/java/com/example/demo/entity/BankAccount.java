@@ -56,8 +56,8 @@ public class BankAccount extends BaseEntity {
 				.id(this.id)
 				.accountNumber(this.accountNumber)
 				.amount(this.amount)
-				.user(this.user)
 				.bank(this.bank)
+				.user(this.user)
 				.mainAccount(this.mainAccount)
 				.build();
 	}
@@ -79,5 +79,30 @@ public class BankAccount extends BaseEntity {
 
 	public User getUser() {
 		return this.user;
+	}
+
+	// 수동 getter 메서드들 추가
+	public Long getId() {
+		return this.id;
+	}
+
+	public String getAccountNumber() {
+		return this.accountNumber;
+	}
+
+	public Long getAmount() {
+		return this.amount;
+	}
+
+	public boolean isMainAccount() {
+		return this.mainAccount;
+	}
+
+	public Bank getBank() {
+		return this.bank;
+	}
+
+	public String getPassword() {
+		return this.password;
 	}
 }

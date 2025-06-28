@@ -48,13 +48,11 @@ const LoginPage = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      console.log("handle signup");
       const response = await userApi.signup(signupData);
-      if (response.status === 200) {
-        // 회원가입 성공 시 로그인 패널로 전환
-        setIsRightPanelActive(false);
-        setErrorMessage("");
-      }
+      console.log("signup succ");
+      setIsRightPanelActive(false);
+
+      // 회원가입 성공 시 동작
     } catch (error) {
       setErrorMessage("회원가입에 실패했습니다.");
     }

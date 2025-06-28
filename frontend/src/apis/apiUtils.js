@@ -15,10 +15,15 @@ class ApiClient {
     // 로컬 스토리지에서 토큰 가져오기
     const token = localStorage.getItem("authToken");
     console.log("headers", token);
-    if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
+    
+    // 토큰이 없으면 로그인 페이지로 리다이렉트
+    if (!token) {
+      console.log("토큰이 없음 - 로그인 페이지로 리다이렉트");
+      window.location.href = "/login";
+      return headers;
     }
-
+    
+    headers["Authorization"] = `Bearer ${token}`;
     return headers;
   }
 
@@ -92,10 +97,12 @@ class ApiClient {
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
 
-      if (response.status === 403 || response.status === 401) {
-        console.log("response status", response.status);
+      // 401(만료) 또는 403(권한 없음)일 때 토큰 삭제 후 로그인 페이지로 리다이렉트
+      if (response.status === 401 || response.status === 403) {
+        console.log("토큰 만료 또는 권한 없음 - 토큰 삭제 후 로그인 페이지로 이동");
         tokenManager.removeToken();
-        // window.location.href = "/login";
+        window.location.href = "/login";
+        return;
       }
 
       throw new Error(

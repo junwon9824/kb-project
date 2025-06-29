@@ -12,6 +12,16 @@ export const logApi = {
     }
   },
 
+  // 계좌번호로 로그 목록 조회  
+  getLogsByAccountNumber: async (accountNumber) => {
+    try {
+      const response = await api.get(`${API_ENDPOINTS.LOG.BY_ACCOUNT}/${accountNumber}`);
+      return response;
+    } catch (error) {
+      throw new Error(error.message || '로그 목록 조회에 실패했습니다.');
+    }
+  },
+
   // 로그 생성
   createLog: async (logData) => {
     try {

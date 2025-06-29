@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import { logApi } from '../apis/logApi';
 import './LogList2.css';
 
 const LogList2 = () => {
@@ -11,8 +11,8 @@ const LogList2 = () => {
   useEffect(() => {
     const fetchLogs = async () => {
       try {
-        const response = await axios.get(`/log/${accountNumber}`);
-        setLogs(response.data);
+        const response = await logApi.getLogsByAccountNumber(accountNumber);
+        setLogs(response.data ? response.data : response);
       } catch (error) {
         console.error('로그 조회 실패:', error);
       } finally {

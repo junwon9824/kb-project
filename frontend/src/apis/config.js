@@ -34,6 +34,7 @@ export const API_ENDPOINTS = {
     LIST: "/api/log",
     CREATE: "/api/log",
     DELETE: "/api/log",
+    BY_ACCOUNT: "/api/log",
   },
 
   // 북마크 관련

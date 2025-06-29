@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { bankAccountApi } from '../apis/bankAccountApi';
 import Header from '../components/Header';
 import './TransferPage.css';
 
@@ -23,10 +23,26 @@ const TransferPage = () => {
   useEffect(() => {
     const fetchUserBankAccounts = async () => {
       try {
-        const response = await axios.get('/bankaccounts');
-        setUserBankAccounts(response.data);
+        // 현재 로그인한 사용자의 userid를 가져와야 합니다
+        // 임시로 하드코딩하거나 localStorage에서 가져오기
+        const userid = localStorage.getItem('userid') || 'junwon9824'; // 임시
+        console.log("요청할 userid:", userid);
+        
+        const response = await bankAccountApi.getAccountList(userid);
+        console.log("전체 응답:", response);
+        console.log("response.data:", response.data);
+        console.log("response.data 타입:", typeof response.data);
+        console.log("Array.isArray(response.data):", Array.isArray(response.data));
+        
+        // 응답이 배열인지 확인하고 안전하게 설정
+        const accounts = Array.isArray(response.data) ? response.data : [];
+        console.log("최종 accounts:", accounts);
+        console.log("accounts 길이:", accounts.length);
+        
+        setUserBankAccounts(accounts);
       } catch (error) {
         console.error('계좌 조회 실패:', error);
+        setUserBankAccounts([]); // 오류 시 빈 배열로 설정
       } finally {
         setLoading(false);
       }
@@ -49,7 +65,7 @@ const TransferPage = () => {
     setErrorMessage('');
 
     try {
-      const response = await axios.post('/transfer', transferData);
+      const response = await bankAccountApi.transfer(transferData);
       if (response.status === 200) {
         // 송금 성공 시 메인 페이지로 이동
         navigate('/users/main?successMessage=송금이 완료되었습니다.');
@@ -122,11 +138,18 @@ const TransferPage = () => {
                 required
               >
                 <option value="">계좌를 선택하세요</option>
-                {userBankAccounts.map((account) => (
-                  <option key={account.id} value={account.accountNumber}>
-                    {account.accountNumber}
-                  </option>
-                ))}
+                {userBankAccounts && userBankAccounts.length > 0 ? (
+                  userBankAccounts.map((account) => {
+                    console.log("계좌 정보:", account);
+                    return (
+                      <option key={account.id} value={account.accountNumber}>
+                        {account.accountNumber} - {account.bankName || 'KB국민은행'}
+                      </option>
+                    );
+                  })
+                ) : (
+                  <option value="9824">9824 - KB국민은행</option>
+                )}
               </select>
             </div>
             
